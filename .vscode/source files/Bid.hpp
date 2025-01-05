@@ -14,7 +14,7 @@ class Bid {
 
     public:
         Bid(Auction auctionId, Item item);
-        void placeBid(Auction auctionId);
+        void placeBid(Auction auctionId, int amount);
         void autoBidLimit(Auction auctionId,int bidLimit);
 
 };

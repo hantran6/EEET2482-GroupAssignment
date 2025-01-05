@@ -7,6 +7,16 @@ Auction::Auction(int auctionId, const Item& item) : auctionId(auctionId), item(i
     std::cout << "Auction created with ID: " << auctionId << std::endl;
 }
 
+int Auction::getCurrentHighestBid() {
+    return currentHighestBid;
+}
+
+void Auction::setCurrentHighestBid(int currentHighestBid) {
+    this->currentHighestBid = currentHighestBid;
+}
+
+
+
 void Auction::startAuction(int durationInSeconds) {
     // Record the start time
     startTime = std::chrono::system_clock::now();

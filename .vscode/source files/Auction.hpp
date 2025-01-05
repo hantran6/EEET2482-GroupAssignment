@@ -35,6 +35,11 @@ class Auction {
         std::list<Bid> getBidList() {
             return bidList;
         }
+
+        int getCurrentHighestBid();
+        void setCurrentHighestBid(int currentHighestBid);
+
+        //void setHighestBidder(Member highestBidder);
             
         void startAuction(int durationInSeconds);
         void endAuction();
