@@ -22,19 +22,20 @@ public:
 
     void start();
 
-    // Guests functions
-    void browseAsGuest();
-    // void registerUser();
-
-    // Member and admin functions
-    // void loginUser(UserRole role);
-    // void logoutUser();
-
     // Redirect to corresponding user dashboard
     void displayProjectInfo();
     void displayMainMenu();
-    // void displayMemberMenu();
-    // void displayAdminMenu();
+    void displayGuestMenu();
+    void displayMemberMenu();
+    void displayAdminMenu();
+
+    // Guests functions
+    void browseAsGuest();
+    void registerUser();
+
+    // Member and admin functions
+    void loginUser(UserRole role);
+    void logoutUser();
 
     // Load and save data
     void loadData();

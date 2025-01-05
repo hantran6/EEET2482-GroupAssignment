@@ -11,8 +11,8 @@ Guest::~Guest(){}
 
 // Browse items (limited details)
 void Guest::browseItemsLimited() const{
-    cout << "\n===== Guest Browsing =====" << endl;
     
-    // Display items logic
+    // REPLACE WITH REAL LOGICS
 
+    cout << "Display the items in limited info here!" << endl;
 }

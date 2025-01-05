@@ -12,12 +12,11 @@ System::System() : usersDataFile("../../data/users.txt"), loggedInUser(nullptr)
 // Destructor
 System::~System()
 {
-    saveData();
+    saveData();                 // Save data on exit
 
-    // Free the memory allocated
     for (auto user : users)
     {
-        delete user;
+        delete user;            // Free the memory allocated
     }
 }
 
@@ -34,14 +33,14 @@ void System::start()
         switch (choice)
         {
         case 1:
-            browseAsGuest();
+            displayGuestMenu();
             break;
         case 2:
-            cout << "Member option" << endl;
             // loginUser(UserRole::Member);
+            cout << "Member selected: Replace this with login logics!" << endl;
             break;
         case 3:
-            cout << "Admin option" << endl;
+            cout << "Admin selected: Replace this with login logics!" << endl;
             // loginUser(UserRole::Admin);
             break;
         case 0:
@@ -53,7 +52,7 @@ void System::start()
     } while (choice != 0);
 }
 
-// Display welcome screen
+// Display Project Details 
 void System::displayProjectInfo()
 {
     std::cout << "EEET2482/COSC2082 GROUP ASSIGNMENT\n"
@@ -67,7 +66,7 @@ void System::displayProjectInfo()
               << "s3963227, Tran Nguyen Ngoc Han\n";
 }
 
-// Display the main menu
+// Display the Main menu
 void System::displayMainMenu()
 {
     std::cout << "\n=== Auction Application ===\n"
@@ -77,20 +76,130 @@ void System::displayMainMenu()
               << "0. Exit\n";
 }
 
-// Guest functionality
-void System::browseAsGuest()
-{
+// Display the Guest menu
+void System::displayGuestMenu() {
+    int choice;
+    do {
+        std::cout << "\n===== Guest Menu =====\n"
+                  << "1. Register as a Member\n"
+                  << "2. Browse as Guest\n"
+                  << "0. Return to Main Menu\n"
+                  << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                registerUser();
+                return;
+            case 2:
+                browseAsGuest(); // Call the simplified browseAsGuest function
+                break;
+            case 0:
+                std::cout << "Returning to Main Menu...\n";
+                return; // Exit guest menu
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 0);
+}
+
+// Display the Member menu
+void System::displayMemberMenu() {
+    int choice;
+    do {
+        std::cout << "\n===== Member Menu =====\n"
+                  << "1. option 1\n"
+                  << "2. option 2\n"
+                  << "0. Return to Main Menu\n"
+                  << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Replace with real option" << endl;
+                break;
+            case 2:
+                cout << "Replace with real option" << endl;
+                break;
+            case 0:
+                std::cout << "Returning to Main Menu...\n";
+                return; 
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 0);
+}
+
+// Display the Admin menu
+void System::displayAdminMenu() {
+    int choice;
+    do {
+        std::cout << "\n===== Admin Menu =====\n"
+                  << "1. option 1\n"
+                  << "2. option 2\n"
+                  << "0. Return to Main Menu\n"
+                  << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Replace with real option" << endl;
+                break;
+            case 2:
+                cout << "Replace with real option" << endl;
+                break;
+            case 0:
+                std::cout << "Returning to Main Menu...\n";
+                return; 
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 0);
+}
+
+// Guest: Browse as guest, display items with limited information
+void System::browseAsGuest(){
     guest.browseItemsLimited();
+}
+
+
+// Guest: Register as Member
+void System::registerUser() {
+
+    // REPLACE WITH REAL LOGICS
+
+    cout << "Account registered successfully" << endl;
+}
+
+
+// Admin + Member: Login
+void System::loginUser(UserRole role){
+    
+    // REPLACE WITH REAL LOGICS
+
+    cout << "Logged in successfully." << endl;
+}
+
+void System::logoutUser(){
+    
+    // REPLACE WITH REAL LOGICS
+
+    cout << "Logged out successfully. Goodbye!" << endl;
 }
 
 // Load data from the file
 void System::loadData() {
-    std::cout << "Loading data" << std::endl;
-    // Implement file reading and user data loading here
+
+    // REPLACE WITH REAL LOGICS
+
+    cout << "Data Loaded successfully." << endl;
 }
+
 
 // Save data to the file
 void System::saveData() {
-    std::cout << "Saving data" << std::endl;
-    // Implement file saving logic here
+
+    // REPLACE WITH REAL LOGICS
+
+    cout << "Data saved successfully." << endl;
 }

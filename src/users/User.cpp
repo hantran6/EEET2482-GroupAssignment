@@ -12,43 +12,52 @@ User::User(const string &username, const string &password, const string &fullNam
     : username(username), password(password), fullName(fullName), phoneNum(phoneNum), email(email), idType(idType), idNum(idNum), role(role) {}
 
 // Destructor
-User::~User(){}
+User::~User() {}
 
 // Getters
-string User::getUsername() const {
+string User::getUsername() const
+{
     return username;
 }
 
-string User::getPassword() const {
-    return password; 
+string User::getPassword() const
+{
+    return password;
 }
 
-string User::getFullName() const {
+string User::getFullName() const
+{
     return fullName;
 }
 
-string User::getPhoneNum() const {
+string User::getPhoneNum() const
+{
     return phoneNum;
 }
 
-string User::getEmail() const {
+string User::getEmail() const
+{
     return email;
 }
 
-string User::getIdType() const {
+string User::getIdType() const
+{
     return idType;
 }
 
-string User::getIdNum() const {
+string User::getIdNum() const
+{
     return idNum;
 }
 
-UserRole User::getRole() const {
+UserRole User::getRole() const
+{
     return role;
 }
 
 // Display profile
-void User::displayProfile() const {
+void User::displayProfile() const
+{
     cout << "Username: " << username << "\n"
          << "Full Name: " << fullName << "\n"
          << "Phone Number: " << phoneNum << "\n"
@@ -59,17 +68,17 @@ void User::displayProfile() const {
 }
 
 // Update Profile
-void User::updateProfile(){
-    // REPLACE WITH REAL LOGIC AND PARAMS
+void User::updateProfile()
+{
 
+    // REPLACE WITH REAL LOGICS AND PARAMS
 
-    
     cout << "Profile updated successfully" << endl;
-} 
-
+}
 
 // Validate Password - Ensure strong password
-bool User::validatePassword(const string &password) {
+bool User::validatePassword(const string &password)
+{
     const regex passwordPattern("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
     return regex_match(password, passwordPattern);
 }

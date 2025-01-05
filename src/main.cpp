@@ -1,6 +1,7 @@
 #include "system/System.h"
 
-int main() {
+int main()
+{
     System system;
     system.start();
     return 0;
