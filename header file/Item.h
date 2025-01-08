@@ -2,55 +2,55 @@
 #define ITEM_H
 
 #include <string> 
-#include <map> 
+#include "Rating.h"
+    
 class Item {
-/* 
--seller: Member
--currentHighestBidder: Member
 
--startDateTime: DateTime
--endDateTime: DateTime
-
-*/
 private: 
     // Attributes 
     int itemID; 
-    int startingBid; 
-    int currentBid; 
+    double startingBid; 
+    double currentBid; 
     int bidIncrement; 
-    int minRatingThreshold; 
-    float minRating; 
-    
 
     std::string name; 
     std::string category; 
     std::string description; 
 
-    std::map<std::string, std::string> listingDetails;  
-    bool hasActiveBids;  
-
-
 public: 
     
     // Constructor
-    Item(std::string name, std::string category, std::string description, int startingBid)
+    Item(std::string name, std::string category, std::string description, double startingBid, double currentBid, double bidIncrement)
         : name(name), category(category), description(description),
-        startingBid(startingBid), currentBid(currentBid), hasActiveBids(false) {}
+        startingBid(startingBid), currentBid(currentBid), bidIncrement(bidIncrement) {}
   
-    // Setters and getters
+    // Getters and setters 
+    int getItemID();
+    int getBidIncrement();
+    double getStartingBid();
+    double getCurrentBid();
+    
     std::string getName();
-    int getCurrentBid();
+    std::string getCategory(); 
+    std::string getDescription();
 
+    void setCurrentBid(double bid);
+    void setCurrentBidder(std::string &bidder);
+    
     void placeBid(int amount, std::string &bidder);
     void displayItems ();
     void createListing(); 
     
     // update new details 
-    void updateListing(const std::map<std::string, std::string>& details);
+    // void updateListing(std::map<std::string, std::string>& details);
 
+    // check if meet the requirement to bid 
+    bool isBidAllowed(int buyerRating, double buyerCP);
+    
     // Delete a listing if no active bid available 
     bool deleteListing();
 };
 
 #endif 
+
 
