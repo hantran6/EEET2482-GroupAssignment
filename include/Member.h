@@ -37,7 +37,7 @@ public:
 
     vector<Item> searchItems(const string& criteria, const string& category, int minCP, int maxCP);
     void viewItemDetails(int itemId) const;
-    void placeBid(int itemId, int bidAmount);
+    /*void placeBid(int itemId, int bidAmount);*/
 };
 
 #endif // MEMBER_H
