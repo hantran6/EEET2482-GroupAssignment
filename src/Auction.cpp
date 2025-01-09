@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
-#include "Auction.hpp"
-#include "Item.hpp"
+#include "./include/Auction.hpp"
+#include "./include/Item.hpp"
 
 //Constuctor
 Auction::Auction(const Item& item, double startingBid, double increment, double minRating) : auctionId(auctionId++), item(item), startingBid(startingBid), increment(increment), minRating(minRating) {  

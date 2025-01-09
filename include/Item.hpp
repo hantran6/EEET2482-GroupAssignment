@@ -2,7 +2,7 @@
 #define ITEM_H
 
 #include <string> 
-#include "Rating.h"
+#include "./include/Rating.h"
     
 class Item {
 private: 
@@ -34,9 +34,9 @@ public:
 
     //setters
     int Item::setItemID(int id);
-    std::string Item::setName(string name);  
-    std::string Item::setCategory(string category); 
-    std::string Item::setDescription(string desc); 
+    std::string Item::setName(std::string name);  
+    std::string Item::setCategory(std::string category); 
+    std::string Item::setDescription(std::string desc); 
     int Item::setStartingBid(int startbid);  
     int Item::setBidIncrement(int increment); 
     int Item::setMinRatingThreshold(int minThreshold);  
