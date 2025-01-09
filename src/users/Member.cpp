@@ -1,54 +1,131 @@
 #include "Member.h"
+#include "Item.h"   
+#include "Bid.h"    
 #include <iostream>
-
+#include <algorithm>
 using namespace std;
 
 // Constructor
-Member::Member(const string &username, const string &password,
-               const string &fullName, const string &phoneNum,
-               const string &email, const string &idType, const string &idNum)
-    : User(username, password, fullName, phoneNum, email, idType, idNum, UserRole::Member),
-      creditPoints(0) {}
+Member::Member() : creditPoints(0), sellerRating(3.0), buyerRating(3.0) {}
 
-// Add credit points
-void Member::addCreditPoints(int amount) {
-    if (amount > 0) {
-        creditPoints += amount;
-        cout << amount << " credit points added. New balance: " << creditPoints << " CP.\n";
-    } else {
-        cout << "Invalid amount. Cannot add credit points.\n";
-    }
-}
-
-// Create a new auction listing
-void Member::createListing(const string &listing) {
-    activeListings.push_back(listing);
-    cout << "Listing added: " << listing << "\n";
-}
-
-// Place a bid
-void Member::placeBid(const string &bid) {
-    activeBids.push_back(bid);
-    cout << "Bid placed: " << bid << "\n";
-}
-
-// View active listings
-void Member::viewListings() const {
-    cout << "\n=== Active Listings ===\n";
-    for (const auto &listing : activeListings) {
-        cout << listing << "\n";
-    }
-}
-
-// View active bids
-void Member::viewBids() const {
-    cout << "\n=== Active Bids ===\n";
-    for (const auto &bid : activeBids) {
-        cout << bid << "\n";
-    }
-}
-
-// Get current credit points
+// Getters
 int Member::getCreditPoints() const {
     return creditPoints;
 }
+
+float Member::getSellerRating() const {
+    return sellerRating;
+}
+
+float Member::getBuyerRating() const {
+    return buyerRating;
+}
+
+// Member Functions
+void Member::topUpCredit(int amount, const string& password) {
+    if (this->password == password) {
+        creditPoints += amount;
+        cout << "Successfully topped up " << amount << " CP. Current balance: " << creditPoints << " CP." << endl;
+    } else {
+        cout << "Password incorrect. Transaction failed." << endl;
+    }
+}
+
+void Member::addSellerRating(float rating) {
+    sellerRating = (sellerRating + rating) / 2; 
+}
+
+void Member::addBuyerRating(float rating) {
+    buyerRating = (buyerRating + rating) / 2; 
+}
+
+float Member::viewOwnAvgRating(bool isSeller) const {
+    return isSeller ? sellerRating : buyerRating;
+}
+
+void Member::checkCPBalance() const {
+    cout << "Credit Points Balance: " << creditPoints << " CP." << endl;
+}
+
+// Seller Functions
+void Member::createItem(const Item& item) {
+    activeListings.push_back(item);
+    cout << "Item \"" << item.getName() << "\" successfully created!" << endl;
+}
+
+void Member::updateItem(int itemId, const Item& updatedItem) {
+    auto it = find_if(activeListings.begin(), activeListings.end(),
+                      [itemId](const Item& item) { return item.getId() == itemId; });
+
+    if (it != activeListings.end()) {
+        *it = updatedItem;
+        cout << "Item \"" << updatedItem.getName() << "\" successfully updated!" << endl;
+    } else {
+        cout << "Item with ID " << itemId << " not found in active listings." << endl;
+    }
+}
+
+void Member::removeItem(int itemId) {
+    auto it = remove_if(activeListings.begin(), activeListings.end(),
+                        [itemId](const Item& item) { return item.getId() == itemId; });
+
+    if (it != activeListings.end()) {
+        activeListings.erase(it, activeListings.end());
+        cout << "Item with ID " << itemId << " successfully removed!" << endl;
+    } else {
+        cout << "Item with ID " << itemId << " not found or cannot be removed." << endl;
+    }
+}
+
+// Buyer Functions
+vector<Item> Member::searchItems(const string& criteria, const string& category, int minCP, int maxCP) {
+    vector<Item> results;
+
+    for (const Item& item : activeListings) {
+        bool matchesCriteria = item.getName().find(criteria) != string::npos;
+        bool matchesCategory = (category.empty() || item.getCategory() == category);
+        bool matchesCPRange = (item.getStartingBid() >= minCP && item.getStartingBid() <= maxCP);
+
+        if (matchesCriteria && matchesCategory && matchesCPRange) {
+            results.push_back(item);
+        }
+    }
+
+    return results;
+}
+
+void Member::viewItemDetails(int itemId) const {
+    auto it = find_if(activeListings.begin(), activeListings.end(),
+                      [itemId](const Item& item) { return item.getId() == itemId; });
+
+    if (it != activeListings.end()) {
+        cout << "Item Details:" << endl;
+        cout << "Name: " << it->getName() << endl;
+        cout << "Category: " << it->getCategory() << endl;
+        cout << "Current Bid: " << it->getCurrentBid() << " CP" << endl;
+        cout << "End Time: " << it->getEndTime() << endl;
+    } else {
+        cout << "Item with ID " << itemId << " not found." << endl;
+    }
+}
+
+/*void Member::placeBid(int itemId, int bidAmount) {
+    auto it = find_if(activeListings.begin(), activeListings.end(),
+                      [itemId](const Item& item) { return item.getId() == itemId; });
+
+    if (it != activeListings.end()) {
+        int currentBid = it->getCurrentBid();
+        int bidIncrement = it->getBidIncrement();
+
+        if (bidAmount >= currentBid + bidIncrement && creditPoints >= bidAmount) {
+            it->setCurrentBid(bidAmount);
+            it->setHighestBidder(this->getUsername());
+            creditPoints -= bidAmount;  // Temporarily deduct credit points
+            cout << "Bid of " << bidAmount << " CP placed on item \"" << it->getName() << "\" successfully!" << endl;
+        } else {
+            cout << "Bid amount insufficient or not enough credit points." << endl;
+        }
+    } else {
+        cout << "Item with ID " << itemId << " not found." << endl;
+    }
+}*/

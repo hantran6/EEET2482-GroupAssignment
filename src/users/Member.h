@@ -3,30 +3,41 @@
 
 #include "User.h"
 #include <vector>
-#include <string>
+using namespace std;
 
-class Member : public User
-{
+class Item;  // Forward Declaration
+class Bid;   // Forward Declaration
+
+class Member : public User {
 private:
-    int creditPoints;                        // Member's credit points balance
-    std::vector<std::string> activeListings; // Member's active auction listings
-    std::vector<std::string> activeBids;     // Member's active bids
+    int creditPoints;
+    float sellerRating;
+    float buyerRating;
+    vector<Bid> activeBids;
+    vector<Item> activeListings;
 
 public:
-    // Constructor
-    Member(const std::string &username, const std::string &password,
-           const std::string &fullName, const std::string &phoneNum,
-           const std::string &email, const std::string &idType, const std::string &idNum);
-
-    // Member-specific methods
-    void addCreditPoints(int amount);
-    void createListing(const std::string &listing);
-    void placeBid(const std::string &bid);
-    void viewListings() const;
-    void viewBids() const;
+    Member();
 
     // Getters
     int getCreditPoints() const;
+    float getSellerRating() const;
+    float getBuyerRating() const;
+
+    // Member Functions
+    void topUpCredit(int amount, const string& password);
+    void addSellerRating(float rating);
+    void addBuyerRating(float rating);
+    float viewOwnAvgRating(bool isSeller) const;
+    void checkCPBalance() const;
+
+    void createItem(const Item& item);
+    void updateItem(int itemId, const Item& updatedItem);
+    void removeItem(int itemId);
+
+    vector<Item> searchItems(const string& criteria, const string& category, int minCP, int maxCP);
+    void viewItemDetails(int itemId) const;
+    /*void placeBid(int itemId, int bidAmount);*/
 };
 
-#endif
+#endif // MEMBER_H
