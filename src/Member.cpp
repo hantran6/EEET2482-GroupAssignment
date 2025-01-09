@@ -109,23 +109,4 @@ void Member::viewItemDetails(int itemId) const {
     }
 }
 
-/*void Member::placeBid(int itemId, int bidAmount) {
-    auto it = find_if(activeListings.begin(), activeListings.end(),
-                      [itemId](const Item& item) { return item.getId() == itemId; });
 
-    if (it != activeListings.end()) {
-        int currentBid = it->getCurrentBid();
-        int bidIncrement = it->getBidIncrement();
-
-        if (bidAmount >= currentBid + bidIncrement && creditPoints >= bidAmount) {
-            it->setCurrentBid(bidAmount);
-            it->setHighestBidder(this->getUsername());
-            creditPoints -= bidAmount;  // Temporarily deduct credit points
-            cout << "Bid of " << bidAmount << " CP placed on item \"" << it->getName() << "\" successfully!" << endl;
-        } else {
-            cout << "Bid amount insufficient or not enough credit points." << endl;
-        }
-    } else {
-        cout << "Item with ID " << itemId << " not found." << endl;
-    }
-}*/
