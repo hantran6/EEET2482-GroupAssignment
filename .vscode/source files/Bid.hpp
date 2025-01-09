@@ -13,9 +13,15 @@ class Bid {
         std::chrono::time_point<std::chrono::system_clock> bidTime;
 
     public:
-        Bid(Auction auctionId, Item item);
-        void placeBid(Auction auctionId, int amount);
-        void autoBidLimit(Auction auctionId,int bidLimit);
+        //Bid(Auction auctionId, Member bidder, int amount);
+
+        int getBidId();
+        void setBidId(int bidId);
+
+        int getBidAmount();
+        void setBidAmount(int amount);
+
+       
 
 };
 

@@ -1,7 +1,7 @@
 #ifndef AUCTION_H
 #define AUCTION_H
 
-#include <list>
+#include <vector>
 
 #include "Item.hpp"
 #include "Bid.hpp"
@@ -9,12 +9,16 @@
 
 class Auction {
     private:
-        int auctionId;
+        int auctionId = 1;
         Item item;
-        std::list<Bid> bidList;
+        double startingBid;
+        double increment;
+        double minRating;
+        std::vector<Bid> bids;
         std::chrono::time_point<std::chrono::system_clock> startTime;
         std::chrono::time_point<std::chrono::system_clock> endTime;
-        bool auctionInProcess;
+        std::chrono::time_point<std::chrono::system_clock> currentTime;
+        bool auctionInProcess  = false;
         int currentHighestBid;
         //Member highestBidder;
         //Member auctionWinner;
@@ -22,7 +26,9 @@ class Auction {
     public:
         // Constructor
         // The bidList is automatically initialized as empty
-        Auction(int auctionId, const Item& item);
+        Auction();
+        Auction(const Item& item, double startingBid, double increment, double minRating);
+        //Auction(int auctionId, const Item& item);
 
         int getAuctionId() {
             return auctionId;
@@ -32,11 +38,18 @@ class Auction {
             return item;
         }
 
-        std::list<Bid> getBidList() {
-            return bidList;
-        }
+        double getStartingBid();
+        void setStartingBid(double startingBid);
 
-        int getCurrentHighestBid();
+        double getIncrement();
+        void setIncrement(double increment);
+
+        double getMinRating();
+        void setMinRating(double minRating);
+
+        std::vector<Bid> getBidList();
+
+        double getCurrentHighestBid();
         void setCurrentHighestBid(int currentHighestBid);
 
         //void setHighestBidder(Member highestBidder);
@@ -44,6 +57,11 @@ class Auction {
         void startAuction(int durationInSeconds);
         void endAuction();
         void processBids();
+
+        void placeBid(double amount);
+        void placeBidWithAutoBidLimit(double amount, double bidLimit);
+
+        bool checkCorrectIncrement(double amount);
 
 };
 
