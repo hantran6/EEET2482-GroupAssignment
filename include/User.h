@@ -12,7 +12,7 @@ protected:
     string phoneNumber;
     string email;
     string idType;  // CitizenID/Passport
-    string idNumber;33
+    string idNumber;
 
 public:
     User();

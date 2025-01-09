@@ -1,7 +1,7 @@
 #ifndef BID_H
 #define BID_H
 
-#include "Auction.hpp"
+#include "Auction.h"
 
 
 class Bid {

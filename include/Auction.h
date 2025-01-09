@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "Item.hpp"
-#include "Bid.hpp"
+#include "Item.h"
+#include "Bid.h"
 
 
 class Auction {

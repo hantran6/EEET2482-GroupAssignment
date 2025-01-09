@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Bid.hpp"
-#include "Auction.hpp"
+#include "Bid.h"
+#include "Auction.h"
 
  int Bid::getBidId(){
     return bidId;
