@@ -2,9 +2,13 @@
 #include <cmath>
 #include "./include/Auction.h"
 #include "./include/Item.h"
+#include "./include/Member.h"
+
+
+int Auction::auctionIdCounter = 1;
 
 //Constuctor
-Auction::Auction(const Item& item, double startingBid, double increment, double minRating) : auctionId(auctionId++), item(item), startingBid(startingBid), increment(increment), minRating(minRating) {  
+Auction::Auction(Member& seller, const Item& item, double startingBid, double increment, double minRating) : auctionId(auctionIdCounter++), seller(seller), item(item), startingBid(startingBid), increment(increment), minRating(minRating) {  
     std::cout << "Auction created with ID: " << auctionId << std::endl;
 }
 
@@ -13,7 +17,7 @@ double Auction::getStartingBid() {
 }
 
 void Auction::setStartingBid(double startingBid){
-    startingBid = startingBid;
+    this->startingBid = startingBid;
 }
 
 double Auction::getIncrement() {
@@ -21,7 +25,7 @@ double Auction::getIncrement() {
 }
 
 void Auction::setIncrement(double increment){
-    increment = increment;
+    this->increment = increment;
 }
 
 double Auction::getMinRating() {
@@ -29,26 +33,36 @@ double Auction::getMinRating() {
 }
 
 void Auction::setMinRating(double minRating){
-    minRating = minRating;
+    this->minRating = minRating;
 }
 
+Member& Auction::getSeller() {
+    return seller;
+}
+
+Member& Auction::getHighestBidder() {
+    return highestBidder;
+}
+
+void Auction::setHighestBidder(Member& highestBidder) {
+    this->highestBidder = highestBidder;
+}
 
 std::vector<Bid> Auction::getBidList() {
             return bids;
         }
 
 double Auction::getCurrentHighestBid() {
-    if(auctionInProcess == true) {
-        if(bids.empty()) {
-            std::cout << "No bids for this item yet" << std::endl;
-        } else {
-            bids.back();
-        }
+    if(bids.empty() || getCurrentHighestBid() == startingBid) {
+        std::cout << "No bids for this item yet" << std::endl;
+        std::cout << "The starting bid is $" << startingBid << endl;
+    } else {
+        bids.back().getBidAmount();
     }
 }
 
 void Auction::setCurrentHighestBid(int currentHighestBid) {
-    currentHighestBid = currentHighestBid;
+    this->currentHighestBid = currentHighestBid;
 }
 
 
@@ -67,19 +81,20 @@ void Auction::startAuction(int durationInSeconds) {
 void Auction::endAuction(){
     auctionInProcess = false;
 
-    //int buyerCp = Bid::highestBidder.cp;
-    //buyerCp -= highestBid;
-    //Member::setCp(buyerCp);
 
-    //int sellerCp = Member::getCP();
-    //sellerCp += highestBid;
-    //Member::setCp(sellerCp);
+    int buyerCp = auctionWinner.getCreditPoints();
+    buyerCp -= getCurrentHighestBid();
+    auctionWinner.updateCreditPoints(buyerCp);
+
+    int sellerCp = getSeller().getCreditPoints();
+    sellerCp += getCurrentHighestBid();
+    getSeller().updateCreditPoints(sellerCp);
 }
 
 void Auction::processBids(){
     if(auctionInProcess) {
         if(currentTime == endTime) {
-            //auctionWinner = Bid::highestBidder;   
+            auctionWinner = highestBidder;   
             Auction::endAuction();
         }
     }
@@ -94,70 +109,87 @@ bool Auction::checkCorrectIncrement(double amount) {
     }
 }
 
-void Auction::placeBid(double amount) {
-//void Auction::placeBid(Member member, double amount) {
-    if(bids.empty() == true) {
+void Auction::placeBid(Member bidder, double amount) {
+    if(bids.empty()) {
         setCurrentHighestBid(startingBid);
     }
     if(getCurrentHighestBid() < amount) {
-        if(checkCorrectIncrement) {
-            //if(checkCPBalance > amount) {
+        if(checkCorrectIncrement(amount)) {
+            if(bidder.getCreditPoints() >= amount) {
                 setCurrentHighestBid(amount);
-                //Bid newBid(getAuctionId, member, amount);
-                //bids.push_back(newBid);
-            //} else {
-            //   std::cerr << "Insufficient amount of credit points.";
-            // }
+                setHighestBidder(bidder);
+                Bid newBid(*this, bidder, amount);
+                bids.push_back(newBid);
+            } else {
+              std::cerr << "Insufficient amount of credit points.";
+            }
         } else {
-            std::cerr << "The bidding increment is " << Auction::getIncrement() << ". Please make a new bid." << std::endl;
+            std::cerr << "The bidding increment is " << Auction::getIncrement() << ". Your next bid should be at least " << Auction::getCurrentHighestBid() + Auction::getIncrement() << std::endl;
         }
     } else {
         std::cout << "Your placing bid has to be higher than " << Auction::getCurrentHighestBid() << std::endl;
     }
 }
 
-void Auction::placeBidWithAutoBidLimit(double amount, double bidLimit) {
-//void Auction::placeBid(Member member, double amount, double bidLimit) {
-    if(bids.empty() == true) {
+void Auction::placeBid(Member bidder, double amount, double bidLimit) {
+    if(bids.empty()) {
         setCurrentHighestBid(startingBid);
     }
     if(getCurrentHighestBid() < amount) {
-        if(checkCorrectIncrement) {
-            //if(checkCPBalance > amount) {
+        if(checkCorrectIncrement(amount)) {
+            if(bidder.getCreditPoints() >= amount) {
                 setCurrentHighestBid(amount);
-                //Bid newBid(getAuctionId, member, amount);
-                //bids.push_back(newBid);
-            //} else {
-            //   std::cerr << "Insufficient amount of credit points.";
-            // }
+                setHighestBidder(bidder);
+                Bid newBid(*this, bidder, amount);
+                bids.push_back(newBid);
+            } else {
+               std::cerr << "Insufficient amount of credit points.";
+            }
         } else {
-            std::cerr << "The bidding increment is " << Auction::getIncrement() << ". Please make a new bid." << std::endl;
+            std::cerr << "The bidding increment is " << Auction::getIncrement() << ". Your next bid should be at least " << Auction::getCurrentHighestBid() + Auction::getIncrement() << std::endl;
         }
     } else {
         std::cout << "Your placing bid has to be higher than " << Auction::getCurrentHighestBid() << std::endl;
     }
-
+    /*
     bool counterBid;
 
     do {
         counterBid = false;
 
-        // Determine the next bid amount for the bidder
+        if(&getHighestBidder() != &bidder) {
+            // Determine the next bid amount for the bidder
+            double nextBid = std::min(bidLimit, getCurrentHighestBid() + getIncrement());
+
+            // Check if the next bid is valid and higher than the current highest bid
+            if (nextBid > getCurrentHighestBid()) {
+                // Update the highest bid and create a new bid object
+                setCurrentHighestBid(nextBid);
+                Bid counterNewBid(*this, bidder, nextBid); // Assuming competingMember context
+                bids.push_back(counterNewBid);
+
+                std::cout << "New counter-bid placed at " << nextBid << std::endl;
+                counterBid = true;
+            }
+        }
+
+    } while (counterBid && getCurrentHighestBid() < bidLimit);
+   */
+
+    while (&getHighestBidder() != &bidder && getCurrentHighestBid() < bidLimit) {
+        // Calculate the next bid amount
         double nextBid = std::min(bidLimit, getCurrentHighestBid() + getIncrement());
 
         // Check if the next bid is valid and higher than the current highest bid
         if (nextBid > getCurrentHighestBid()) {
-            // Update the highest bid and create a new bid object
             setCurrentHighestBid(nextBid);
-            //Bid counterNewBid(getAuctionId(), competingMember, nextBid); // Assuming competingMember context
-            //bids.push_back(counterNewBid);
-
-            std::cout << "New counter-bid placed at " << nextBid << std::endl;
-            counterBid = true;
+            setHighestBidder(bidder);
+            Bid counterNewBid(*this, bidder, nextBid);
+            bids.push_back(counterNewBid);
+        } else {
+            break;
         }
-
-    } while (counterBid && getCurrentHighestBid() < bidLimit);
-   
+    }
 }
 
 
