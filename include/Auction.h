@@ -3,13 +3,15 @@
 
 #include <vector>
 
-#include "Item.hpp"
-#include "Bid.hpp"
+#include "Item.h"
+#include "Bid.h"
+#include "Member.h"
 
 
 class Auction {
     private:
-        int auctionId = 1;
+        static int auctionIdCounter;
+        int auctionId;
         Item item;
         double startingBid;
         double increment;
@@ -20,14 +22,15 @@ class Auction {
         std::chrono::time_point<std::chrono::system_clock> currentTime;
         bool auctionInProcess  = false;
         int currentHighestBid;
-        //Member highestBidder;
-        //Member auctionWinner;
+        Member highestBidder;
+        Member auctionWinner;
+        Member seller;
 
     public:
         // Constructor
         // The bidList is automatically initialized as empty
         Auction();
-        Auction(const Item& item, double startingBid, double increment, double minRating);
+        Auction(Member& seller, const Item& item, double startingBid, double increment, double minRating);
         //Auction(int auctionId, const Item& item);
 
         int getAuctionId() {
@@ -47,19 +50,22 @@ class Auction {
         double getMinRating();
         void setMinRating(double minRating);
 
+        Member& getSeller();
+
         std::vector<Bid> getBidList();
 
         double getCurrentHighestBid();
         void setCurrentHighestBid(int currentHighestBid);
 
-        //void setHighestBidder(Member highestBidder);
+        Member& getHighestBidder();
+        void setHighestBidder(Member& highestBidder);
             
         void startAuction(int durationInSeconds);
         void endAuction();
         void processBids();
 
-        void placeBid(double amount);
-        void placeBidWithAutoBidLimit(double amount, double bidLimit);
+        void placeBid(Member seller, double amount);
+        void placeBid(Member seller, double amount, double bidLimit);
 
         bool checkCorrectIncrement(double amount);
 

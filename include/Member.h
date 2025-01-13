@@ -2,13 +2,11 @@
 #define MEMBER_H
 
 #include "User.h"
-#include "./include/Auction.h"
-
 #include <vector>
 using namespace std;
 
-//class Item;  // Forward Declaration
-//class Bid;   // Forward Declaration
+class Item;  // Forward Declaration
+class Bid;   // Forward Declaration
 
 class Member : public User {
 private:
@@ -25,8 +23,6 @@ public:
     int getCreditPoints() const;
     float getSellerRating() const;
     float getBuyerRating() const;
-
-    void updateCreditPoints(int creditPoints) const;
 
     // Member Functions
     void topUpCredit(int amount, const string& password);

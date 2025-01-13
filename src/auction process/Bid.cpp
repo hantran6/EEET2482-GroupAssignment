@@ -1,10 +1,14 @@
 #include <iostream>
-#include "Bid.hpp"
-#include "Auction.hpp"
+#include "./include/Bid.h"
+#include "./include/Auction.h"
 
- int Bid::getBidId(){
+
+
+Bid::Bid(const Auction& auction, const Member& bidder, int amount) : auction(auction), bidder(bidder), amount(amount) {}
+
+int Bid::getBidId(){
     return bidId;
- }
+}
 
 void Bid::setBidId(int bidId){
     bidId = bidId;

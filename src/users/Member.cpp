@@ -1,6 +1,6 @@
 #include "Member.h"
-#include "./include/Item.h"   
-#include "./include/Bid.h"    
+#include "Item.h"   
+#include "Bid.h"    
 #include <iostream>
 #include <algorithm>
 using namespace std;
@@ -19,10 +19,6 @@ float Member::getSellerRating() const {
 
 float Member::getBuyerRating() const {
     return buyerRating;
-}
-
-void Member::updateCreditPoints(int creditPoints) const {
-    creditPoints = creditPoints;
 }
 
 // Member Functions

@@ -1,19 +1,21 @@
 #ifndef BID_H
 #define BID_H
 
-#include "Auction.hpp"
+#include "Auction.h"
+#include "Member.h"
 
 
 class Bid {
     private:
         int bidId;
         int amount;
-        Item item;
-        //Member bidder;
+        Auction auction;
+        //Item item;
+        Member bidder;
         std::chrono::time_point<std::chrono::system_clock> bidTime;
 
     public:
-        //Bid(Auction auctionId, Member bidder, int amount);
+        Bid(const Auction& auction, const Member& bidder, int amount);
 
         int getBidId();
         void setBidId(int bidId);

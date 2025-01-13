@@ -8,7 +8,7 @@ class Item {
 private: 
     // Attributes 
     int itemID; 
-    Member seller;
+    // Member seller;
     std::string name;
     std::string category; 
     std::string description; 
@@ -31,7 +31,6 @@ public:
     int getBidIncrement();
     int getMinRatingThreshold();
     int getCurrentHighestBid();
-    Member getSeller();
 
     //setters
     int Item::setItemID(int id);
