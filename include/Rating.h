@@ -1,19 +1,27 @@
 #ifndef RATING_H
 #define RATING_H
 
+#include <vector> 
+#include <string> 
+
 class Rating {
 private:
-    // Member: rate 
+    vector <int> sellerRatings; 
+    vector <int> buyerRatings; 
     int ratingID;
-    // Member rater;
-    // Member rate;
-    int score; // from 1 to 5  
-    std::string role;
+    int score = 3; // score rating score ranging from 1 to 5, default rating = 3 
+    double sellerAverageRating; 
+    double buyerAverageRating; 
 
 public: 
-    Rating(int ratingID,int score, std::string role);
-    // void calculateAverageRating(Member a);
-    void getRatingDetails();
+    Rating ();
+    
+    void addSellerRating(int rating);
+
+    void addBuyerRating(int rating);
+
+    
+
 };
 
 #endif 
