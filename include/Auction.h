@@ -13,8 +13,8 @@ class Auction {
         static int auctionIdCounter;
         int auctionId;
         Item item;
-        double startingBid;
-        double increment;
+        int startingBid;
+        int increment;
         double minRating;
         std::vector<Bid> bids;
         std::chrono::time_point<std::chrono::system_clock> startTime;
@@ -64,8 +64,8 @@ class Auction {
         void endAuction();
         void processBids();
 
-        void placeBid(Member seller, double amount);
-        void placeBid(Member seller, double amount, double bidLimit);
+        void placeBid(Member& seller, double amount, double minRating);
+        void placeBid(Member& seller, double amount, double minRating, double bidLimit);
 
         bool checkCorrectIncrement(double amount);
 

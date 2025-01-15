@@ -84,11 +84,11 @@ void Auction::endAuction(){
 
     int buyerCp = auctionWinner.getCreditPoints();
     buyerCp -= getCurrentHighestBid();
-    auctionWinner.updateCreditPoints(buyerCp);
+    auctionWinner.updateCPBalance(buyerCp);
 
     int sellerCp = getSeller().getCreditPoints();
     sellerCp += getCurrentHighestBid();
-    getSeller().updateCreditPoints(sellerCp);
+    getSeller().updateCPBalance(sellerCp);
 }
 
 void Auction::processBids(){
@@ -109,48 +109,53 @@ bool Auction::checkCorrectIncrement(double amount) {
     }
 }
 
-void Auction::placeBid(Member bidder, double amount) {
+void Auction::placeBid(Member& bidder, double amount, double minRating) {
     if(bids.empty()) {
         setCurrentHighestBid(startingBid);
     }
-    if(getCurrentHighestBid() < amount) {
-        if(checkCorrectIncrement(amount)) {
-            if(bidder.getCreditPoints() >= amount) {
-                setCurrentHighestBid(amount);
-                setHighestBidder(bidder);
-                Bid newBid(*this, bidder, amount);
-                bids.push_back(newBid);
+    if(bidder.getBuyerRating() >= minRating) {
+        if(getCurrentHighestBid() < amount) {
+            if(checkCorrectIncrement(amount)) {
+                if(bidder.getCreditPoints() >= amount) {
+                    setCurrentHighestBid(amount);
+                    setHighestBidder(bidder);
+                    Bid newBid(*this, bidder, amount);
+                    bids.push_back(newBid);
+                } else {
+                std::cerr << "Insufficient amount of credit points.";
+                }
             } else {
-              std::cerr << "Insufficient amount of credit points.";
+                std::cerr << "The bidding increment is " << Auction::getIncrement() << ". Your next bid should be at least " << Auction::getCurrentHighestBid() + Auction::getIncrement() << std::endl;
             }
         } else {
-            std::cerr << "The bidding increment is " << Auction::getIncrement() << ". Your next bid should be at least " << Auction::getCurrentHighestBid() + Auction::getIncrement() << std::endl;
+            std::cout << "Your placing bid has to be higher than " << Auction::getCurrentHighestBid() << std::endl;
         }
-    } else {
-        std::cout << "Your placing bid has to be higher than " << Auction::getCurrentHighestBid() << std::endl;
-    }
+    }   
 }
+    
 
-void Auction::placeBid(Member bidder, double amount, double bidLimit) {
+void Auction::placeBid(Member& bidder, double amount, double minRating, double bidLimit) {
     if(bids.empty()) {
         setCurrentHighestBid(startingBid);
     }
-    if(getCurrentHighestBid() < amount) {
-        if(checkCorrectIncrement(amount)) {
-            if(bidder.getCreditPoints() >= amount) {
-                setCurrentHighestBid(amount);
-                setHighestBidder(bidder);
-                Bid newBid(*this, bidder, amount);
-                bids.push_back(newBid);
+    if(bidder.getBuyerRating() >= minRating) {
+        if(getCurrentHighestBid() < amount) {
+            if(checkCorrectIncrement(amount)) {
+                if(bidder.getCreditPoints() >= amount) {
+                    setCurrentHighestBid(amount);
+                    setHighestBidder(bidder);
+                    Bid newBid(*this, bidder, amount);
+                    bids.push_back(newBid);
+                } else {
+                std::cerr << "Insufficient amount of credit points.";
+                }
             } else {
-               std::cerr << "Insufficient amount of credit points.";
+                std::cerr << "The bidding increment is " << Auction::getIncrement() << ". Your next bid should be at least " << Auction::getCurrentHighestBid() + Auction::getIncrement() << std::endl;
             }
         } else {
-            std::cerr << "The bidding increment is " << Auction::getIncrement() << ". Your next bid should be at least " << Auction::getCurrentHighestBid() + Auction::getIncrement() << std::endl;
+            std::cout << "Your placing bid has to be higher than " << Auction::getCurrentHighestBid() << std::endl;
         }
-    } else {
-        std::cout << "Your placing bid has to be higher than " << Auction::getCurrentHighestBid() << std::endl;
-    }
+    }   
     /*
     bool counterBid;
 
@@ -176,7 +181,7 @@ void Auction::placeBid(Member bidder, double amount, double bidLimit) {
     } while (counterBid && getCurrentHighestBid() < bidLimit);
    */
 
-    while (&getHighestBidder() != &bidder && getCurrentHighestBid() < bidLimit) {
+    while (&getHighestBidder() != &bidder && getCurrentHighestBid() < bidLimit && bidder.getBuyerRating() >= minRating) {
         // Calculate the next bid amount
         double nextBid = std::min(bidLimit, getCurrentHighestBid() + getIncrement());
 
@@ -190,9 +195,4 @@ void Auction::placeBid(Member bidder, double amount, double bidLimit) {
             break;
         }
     }
-}
-
-
-int main() {
-
 }

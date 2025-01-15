@@ -8,7 +8,7 @@
 class Bid {
     private:
         int bidId;
-        int amount;
+        double amount;
         Auction auction;
         //Item item;
         Member bidder;
@@ -21,9 +21,8 @@ class Bid {
         void setBidId(int bidId);
 
         int getBidAmount();
-        void setBidAmount(int amount);
-
-       
+        void setBidAmount(double amount);
+      
 
 };
 
