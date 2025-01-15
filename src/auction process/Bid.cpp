@@ -19,10 +19,6 @@ int Bid::getBidAmount(){
     return amount;
 }
 
-void Bid::setBidAmount(int amount) {
-    amount = amount;
-}
-
-int main() {
-    
+void Bid::setBidAmount(double amount) {
+    this->amount = amount;
 }
