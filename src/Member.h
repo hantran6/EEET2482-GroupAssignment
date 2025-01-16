@@ -1,0 +1,39 @@
+#ifndef MEMBER_H
+#define MEMBER_H
+
+#include "User.h"
+#include "Member.h"
+#include "Utils.h"
+#include <vector>
+#include <string>
+
+class Member : public User
+{
+private:
+    std::vector<int> activeBids; // Track item IDs with active bids
+    double buyerRating;
+    double sellerRating;
+
+public:
+    Member(std::string username, std::string password, std::string fullName, std::string phoneNumber,
+           std::string email, std::string idType, std::string idNumber, UserRole(role));
+
+    // Member-specific methods
+    void placeBid(int itemId, int bidAmount);
+    void createListing(int itemId);
+    void rateTransaction(const std::string &role, double rating);
+
+    void viewProfile() const;
+
+    // Getters
+    double getBuyerRating() const;
+    double getSellerRating() const;
+
+    // Updating profiles
+    void updateFullName(const std::string &newFullName);
+    void updatePhoneNumber(const std::string &newPhoneNumber);
+    void updateEmail(const std::string &newEmail);
+    void updatePassword(const std::string &password);
+};
+
+#endif
