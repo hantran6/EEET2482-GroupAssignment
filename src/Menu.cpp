@@ -87,7 +87,7 @@ void displayMemberMenu(AuctionSystem &auctionSystem, Member &member)
         // As Buyer
         std::cout << "8. Search for items\n";
         std::cout << "9. View item details\n";
-        std::cout << "10. Place a bid";
+        std::cout << "10. Place a bid\n";
 
         std::cout << "11. Back to Main Menu\n";
         std::cout << "0. Exit\n";
