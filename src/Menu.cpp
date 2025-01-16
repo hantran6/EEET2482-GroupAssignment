@@ -106,6 +106,18 @@ void displayMemberMenu(AuctionSystem &auctionSystem, Member &member)
             // top up credit
             break;
         case 4:
+            member.viewMyListings(auctionSystem);
+            break;
+        case 5:
+            member.createListing(auctionSystem);
+            break;
+        case 6:
+            member.editListing(auctionSystem);
+            break;
+        case 7:
+            member.removeListing(auctionSystem);
+            break;
+        case 11:
             return;
         case 0:
             saveAndExit(auctionSystem);

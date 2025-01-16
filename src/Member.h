@@ -5,9 +5,10 @@
 #include "Member.h"
 #include "Utils.h"
 #include "Item.h"
-#include "AuctionSystem.h"
 #include <vector>
 #include <string>
+
+class AuctionSystem;
 
 class Member : public User
 {
@@ -22,17 +23,18 @@ public:
 
     // Member-specific methods
     void placeBid(int itemId, int bidAmount);
-    // void createListing(AuctionSystem &auctionSystem);
-    // void editListing(AuctionSystem &auctionSystem);
-    // void removeListing(AuctionSystem &auctionSystem);
+    void viewMyListings(AuctionSystem &auctionSystem);
+    void createListing(AuctionSystem &auctionSystem);
+    void editListing(AuctionSystem &auctionSystem);
+    void removeListing(AuctionSystem &auctionSystem);
     // void rateTransaction(const std::string &role, double rating);
-
 
     void viewProfile() const;
 
     // Getters
     double getBuyerRating() const;
     double getSellerRating() const;
+    int getItemById() const;
 
     // Updating profiles
     void updateFullName(const std::string &newFullName);

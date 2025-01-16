@@ -2,74 +2,15 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 AuctionSystem::AuctionSystem() {}
 
 // Users ================================================================================================================
-void AuctionSystem::loadUsers(const std::string &filename)
+// Getter for members
+const std::vector<User *> &AuctionSystem::getMembers() const
 {
-    std::ifstream inFile(filename);
-    if (!inFile)
-    {
-        std::cerr << "Error: Could not open file: " << filename << "\n";
-        return;
-    }
-
-    std::string line, word;
-    std::getline(inFile, line); // Skip header
-    while (std::getline(inFile, line))
-    {
-        std::istringstream ss(line);
-        std::vector<std::string> fields;
-        while (std::getline(ss, word, ','))
-        {
-            fields.push_back(word);
-        }
-
-        if (fields.size() == 11) // Ensure all fields are present
-        {
-            UserRole role = (fields[10] == "Admin") ? UserRole::Admin : UserRole::Member;
-
-            if (role == UserRole::Member)
-            {
-                Member *member = new Member(fields[0], fields[1], fields[2], fields[3], fields[4],
-                                            fields[5], fields[6], role);
-                member->topUpCredits(std::stoi(fields[7]));
-                member->setBuyerRating(std::stod(fields[8]));
-                member->setSellerRating(std::stod(fields[9]));
-                members.push_back(member); // Store Member object
-            }
-            else if (role == UserRole::Admin)
-            {
-                Admin *admin = new Admin(fields[0], fields[1], role);
-                members.push_back(admin); // Store Admin object
-            }
-        }
-    }
-
-    inFile.close();
-}
-
-void AuctionSystem::saveUsers(const std::string &filename)
-{
-    std::ofstream outFile(filename);
-    if (!outFile)
-    {
-        std::cerr << "Error: Could not open file for saving users.\n";
-        return;
-    }
-
-    outFile << "username,password,full_name,phone,email,id_type,id_number,credit_points,buyer_rating,seller_rating,role\n";
-
-    for (const auto &user : members)
-    {
-        outFile << user->getUsername() << "," << user->getPassword() << "," << user->getFullName() << ","
-                << user->getPhoneNumber() << "," << user->getEmail() << "," << user->getIdType() << ","
-                << user->getIdNumber() << "," << user->getCreditPoints() << "," << user->getBuyerRating() << ","
-                << user->getSellerRating() << "," << (user->getRole() == UserRole::Admin ? "Admin" : "Member") << "\n";
-    }
-
-    outFile.close();
+    return members;
 }
 
 void AuctionSystem::registerMember()
@@ -186,29 +127,208 @@ User *AuctionSystem::loginAdmin()
     return nullptr;
 }
 
-const std::vector<User *> &AuctionSystem::getMembers() const
-{
-    return members;
-}
 // Items ================================================================================================================
-void AuctionSystem::loadItems(const std::string &filename)
+// Getter for items
+const std::vector<Item> &AuctionSystem::getItems() const
 {
-    // Implementation is similar to loadUsers
-}
-
-void AuctionSystem::saveItems(const std::string &filename)
-{
-    // Implementation is similar to saveUsers
+    return items;
 }
 
 void AuctionSystem::addItem(const Item &item)
 {
     items.push_back(item);
+    saveItems("./data/items.csv");
+}
+
+void AuctionSystem::removeItem(int itemId)
+{
+    auto it = std::remove_if(items.begin(), items.end(),
+                             [itemId](const Item &item)
+                             { return item.getId() == itemId; });
+
+    if (it != items.end())
+    {
+        items.erase(it, items.end());
+        saveItems("./data/items.csv");
+    }
+    else
+    {
+        Utils::showError("Item not found.");
+    }
+}
+
+Item *AuctionSystem::getItemById(int id)
+{
+    for (auto &item : items)
+    { // Iterate through the items vector
+        if (item.getId() == id)
+        {
+            return &item; // Return a pointer to the matching item
+        }
+    }
+    return nullptr; // Return nullptr if no item is found
 }
 
 int AuctionSystem::generateItemId()
 {
-    static int nextItemId = 1; // Static variable to persist the value across calls
-    return nextItemId++;
+    int maxId = 0;
+
+    // Iterate through items to find the maximum ID
+    for (const auto &item : items)
+    {
+        if (item.getId() > maxId)
+        {
+            maxId = item.getId();
+        }
+    }
+
+    return maxId + 1; // Return the next available ID
 }
 
+// Database ================================================================================================================
+void AuctionSystem::loadUsers(const std::string &filename)
+{
+    std::ifstream inFile(filename);
+    if (!inFile)
+    {
+        std::cerr << "Error: Could not open file: " << filename << "\n";
+        return;
+    }
+
+    std::string line, word;
+    std::getline(inFile, line); // Skip header
+    while (std::getline(inFile, line))
+    {
+        std::istringstream ss(line);
+        std::vector<std::string> fields;
+        while (std::getline(ss, word, ','))
+        {
+            fields.push_back(word);
+        }
+
+        if (fields.size() == 11) // Ensure all fields are present
+        {
+            UserRole role = (fields[10] == "Admin") ? UserRole::Admin : UserRole::Member;
+
+            if (role == UserRole::Member)
+            {
+                Member *member = new Member(fields[0], fields[1], fields[2], fields[3], fields[4],
+                                            fields[5], fields[6], role);
+                member->topUpCredits(std::stoi(fields[7]));
+                member->setBuyerRating(std::stod(fields[8]));
+                member->setSellerRating(std::stod(fields[9]));
+                members.push_back(member); // Store Member object
+            }
+            else if (role == UserRole::Admin)
+            {
+                Admin *admin = new Admin(fields[0], fields[1], role);
+                members.push_back(admin); // Store Admin object
+            }
+        }
+    }
+
+    inFile.close();
+}
+
+void AuctionSystem::saveUsers(const std::string &filename)
+{
+    std::ofstream outFile(filename);
+    if (!outFile)
+    {
+        std::cerr << "Error: Could not open file for saving users.\n";
+        return;
+    }
+
+    outFile << "username,password,full_name,phone,email,id_type,id_number,credit_points,buyer_rating,seller_rating,role\n";
+
+    for (const auto &user : members)
+    {
+        outFile << user->getUsername() << "," << user->getPassword() << "," << user->getFullName() << ","
+                << user->getPhoneNumber() << "," << user->getEmail() << "," << user->getIdType() << ","
+                << user->getIdNumber() << "," << user->getCreditPoints() << "," << user->getBuyerRating() << ","
+                << user->getSellerRating() << "," << (user->getRole() == UserRole::Admin ? "Admin" : "Member") << "\n";
+    }
+
+    outFile.close();
+}
+
+void AuctionSystem::loadItems(const std::string &filename)
+{
+    std::ifstream inFile(filename);
+    if (!inFile)
+    {
+        std::cerr << "Error: Could not open file: " << filename << "\n";
+        return;
+    }
+
+    std::string line, word;
+    std::getline(inFile, line); // Skip header
+    while (std::getline(inFile, line))
+    {
+        std::istringstream ss(line);
+        std::vector<std::string> fields;
+        while (std::getline(ss, word, ','))
+        {
+            fields.push_back(word);
+        }
+
+        if (fields.size() == 11) // Ensure all fields are present
+        {
+            int id = std::stoi(fields[0]);
+            std::string name = fields[1];
+            std::string category = fields[2];
+            std::string description = fields[3];
+            double startingBid = std::stod(fields[4]);
+            double bidIncrement = std::stod(fields[5]);
+            double currentBid = std::stod(fields[6]);
+            std::string highestBidder = fields[7];
+            std::string seller = fields[8];
+            double minRating = std::stod(fields[9]);
+            std::string endDateTime = fields[10];
+
+            // Create and populate the Item object
+            Item item(id, name, category, description, startingBid, bidIncrement, seller, minRating);
+            item.setCurrentBid(currentBid);
+            item.setHighestBidder(highestBidder);
+            item.setEndDateTime(endDateTime);
+
+            // Add the item to the list
+            items.push_back(item);
+
+            // Debugging message
+            std::cout << "Loaded item: " << name << " (ID: " << id << ")\n";
+        }
+    }
+    inFile.close();
+}
+
+void AuctionSystem::saveItems(const std::string &filename)
+{
+    std::ofstream outFile(filename); // Open file in write mode
+    if (!outFile)
+    {
+        std::cerr << "Error: Could not open file for saving items.\n";
+        return;
+    }
+
+    // Write header
+    outFile << "id,name,category,description,starting_bid,bid_increment,current_bid,highest_bidder,seller,min_rating,end_date_time\n";
+
+    // Write all items in memory to the file
+    for (const auto &item : items)
+    {
+        outFile << item.getId() << ","
+                << item.getName() << ","
+                << item.getCategory() << ","
+                << item.getDescription() << ","
+                << item.getStartingBid() << ","
+                << item.getBidIncrement() << ","
+                << item.getCurrentBid() << ","
+                << item.getHighestBidder() << ","
+                << item.getSellerUsername() << ","
+                << item.getMinRating() << ","
+                << item.getEndDateTime() << "\n";
+    }
+
+    outFile.close();
+}

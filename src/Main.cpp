@@ -6,6 +6,7 @@ int main()
 {
     AuctionSystem auctionSystem;
 
+    // Load data from the database
     auctionSystem.loadUsers("./data/users.csv");
     auctionSystem.loadItems("./data/items.csv");
 
