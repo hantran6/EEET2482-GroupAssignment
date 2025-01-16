@@ -32,6 +32,8 @@ public:
     void addItem(const Item &item);
     void removeItem(int id);
     Item *getItemById(int id);
+    std::vector<Item> searchItems(const std::string &name, const std::string &category, double minCredits, double maxCredits);
+    void viewItemDetails(int itemId);
 
     // Getters for database access
     const std::vector<User *> &getMembers() const;

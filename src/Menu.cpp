@@ -1,5 +1,5 @@
 #include "Menu.h"
-
+#include <limits>
 #include <iostream>
 
 // General ===============================================================================================
@@ -117,6 +117,57 @@ void displayMemberMenu(AuctionSystem &auctionSystem, Member &member)
         case 7:
             member.removeListing(auctionSystem);
             break;
+        case 8:
+        {
+            std::string name, category;
+            double minCredits = 0.0, maxCredits = 0.0;
+
+            std::cin.ignore(); // Clear the input buffer
+            std::cout << "Enter item name (leave blank for any): ";
+            std::getline(std::cin, name);
+
+            std::cout << "Enter category (leave blank for any): ";
+            std::getline(std::cin, category);
+
+            std::cout << "Enter minimum credits (leave 0 for no minimum): ";
+            std::cin >> minCredits;
+
+            std::cout << "Enter maximum credits (leave 0 for no maximum): ";
+            std::cin >> maxCredits;
+
+            if (maxCredits == 0)
+                maxCredits = std::numeric_limits<double>::max(); // No maximum limit if 0
+
+            std::vector<Item> searchResults = auctionSystem.searchItems(name, category, minCredits, maxCredits);
+            if (searchResults.empty())
+            {
+                std::cout << "No items found matching the criteria.\n";
+            }
+            else
+            {
+                std::cout << "\n========== Search Results ==========\n";
+                for (const auto &item : searchResults)
+                {
+                    std::cout << "Item ID: " << item.getId() << "\n"
+                              << "Name: " << item.getName() << "\n"
+                              << "Category: " << item.getCategory() << "\n"
+                              << "Starting Bid: " << item.getStartingBid() << " CP\n"
+                              << "Auction Ends At: " << item.getEndDateTime() << "\n"
+                              << "-----------------------------------------\n";
+                }
+            }
+            break;
+        }
+        case 9:
+        {
+            int itemId;
+            std::cout << "Enter item ID to view details: ";
+            std::cin >> itemId;
+
+            auctionSystem.viewItemDetails(itemId);
+            break;
+        }
+
         case 11:
             return;
         case 0:

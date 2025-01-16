@@ -169,6 +169,45 @@ Item *AuctionSystem::getItemById(int id)
     return nullptr; // Return nullptr if no item is found
 }
 
+std::vector<Item> AuctionSystem::searchItems(const std::string &name, const std::string &category, double minCredits, double maxCredits)
+{
+    std::vector<Item> results;
+    for (const auto &item : items)
+    {
+        // Check if the item matches the search criteria
+        bool matchesName = name.empty() || item.getName().find(name) != std::string::npos;
+        bool matchesCategory = category.empty() || item.getCategory() == category;
+        bool matchesCreditRange = item.getStartingBid() >= minCredits && item.getStartingBid() <= maxCredits;
+
+        if (matchesName && matchesCategory && matchesCreditRange)
+        {
+            results.push_back(item);
+        }
+    }
+    return results;
+}
+
+void AuctionSystem::viewItemDetails(int itemId)
+{
+    Item *item = getItemById(itemId);
+    if (!item)
+    {
+        Utils::showError("Item not found.");
+        return;
+    }
+
+    std::cout << "\n========== Items Details ==========\n";
+    std::cout << "Item ID: " << item->getId() << "\n"
+              << "Name: " << item->getName() << "\n"
+              << "Category: " << item->getCategory() << "\n"
+              << "Description: " << item->getDescription() << "\n"
+              << "Starting Bid: " << item->getStartingBid() << " CP\n"
+              << "Current Bid: " << item->getCurrentBid() << " CP\n"
+              << "Highest Bidder: " << item->getHighestBidder() << "\n"
+              << "Auction Ends At: " << item->getEndDateTime() << "\n"
+              << "====================================\n";
+}
+
 int AuctionSystem::generateItemId()
 {
     int maxId = 0;
