@@ -7,12 +7,12 @@ Member::Member(std::string username, std::string password, std::string fullName,
     : User(username, password, fullName, phoneNumber, email, idType, idNumber, role),
       buyerRating(3.0), sellerRating(3.0) {}
 
-void Member::placeBid(int itemId, int bidAmount)
+/*void Member::placeBid(int itemId, int bidAmount)
 {
     activeBids.push_back(itemId);
     std::cout << "Bid placed successfully!" << std::endl;
 }
-
+*/
 // void Member::createListing(AuctionSystem &auctionSystem)
 // {
 //     std::string name, category, description, endDateTime;
@@ -186,3 +186,10 @@ double Member::getSellerRating() const
 {
     return sellerRating;
 }
+
+std::vector<double> Member::getBuyerRatingList() const {
+    return buyerRatingList;
+}
+    std::vector<double> Member::getSellerRatingList() const {
+        return sellerRatingList;
+    }
