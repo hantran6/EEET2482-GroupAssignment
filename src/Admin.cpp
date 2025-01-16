@@ -5,7 +5,7 @@ Admin::Admin(std::string username, std::string password, UserRole role)
     : User(username, password, "", "", "", "", "", role) {}
 
 // Admin-specific methods
-void Admin::viewAllMembers(const std::vector<User *> &members) const
+void Admin::viewAllProfiles(const std::vector<User *> &members) const
 {
     std::cout << "========== All Members ==========\n";
     for (const auto &user : members)
@@ -14,8 +14,7 @@ void Admin::viewAllMembers(const std::vector<User *> &members) const
         {
             std::cout << "Username: " << user->getUsername()
                       << ", Full Name: " << user->getFullName()
-                      << ", Email: " << user->getEmail()
-                      << ", Credit Points: " << user->getCreditPoints() << "\n";
+                      << ", Email: " << user->getEmail();
         }
     }
     std::cout << "=================================\n";

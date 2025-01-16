@@ -17,6 +17,7 @@ private:
     double buyerRating;
     //rating that a seller receives
     double sellerRating;
+    double creditPoints;
 
     std::vector<double> buyerRatingList;
     std::vector<double> sellerRatingList;
@@ -38,15 +39,23 @@ public:
     // Getters
     double getBuyerRating() const;
     double getSellerRating() const;
+    double getCreditPoints() const;
 
     std::vector<double> getBuyerRatingList() const;
     std::vector<double> getSellerRatingList() const;
+
+    //Setter
+    void setBuyerRating(double rating);
+    void setSellerRating(double rating);
+
 
     // Updating profiles
     void updateFullName(const std::string &newFullName);
     void updatePhoneNumber(const std::string &newPhoneNumber);
     void updateEmail(const std::string &newEmail);
     void updatePassword(const std::string &password);
+
+    void topUpCredits(const double &amount);
 };
 
 #endif

@@ -35,3 +35,20 @@ double Rating::calculateAvgRating(std::vector<double> ratingList) {
     return total / ratingList.size();
 }
 
+/*
+auctionends() {
+    if(currentime == endtime) {
+        auctionwinnr = currenthighestbidder;
+        double highestbid = getcurrenthighestbid()
+        updatecreditpoint(buyer, highestbid);
+        updatecreditpoints(seller, highestbid);
+
+        if(getSellerUsername == this->username)
+             ratingbuyer(auctionwinner)
+        else if(this->username == auctionWinner.getUsername())
+            ratingSeller(seller);
+
+
+    }
+}
+*/

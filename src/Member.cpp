@@ -5,7 +5,10 @@ Member::Member(std::string username, std::string password, std::string fullName,
                std::string phoneNumber, std::string email, std::string idType,
                std::string idNumber, UserRole role = UserRole::Member)
     : User(username, password, fullName, phoneNumber, email, idType, idNumber, role),
-      buyerRating(3.0), sellerRating(3.0) {}
+      buyerRating(3.0), sellerRating(3.0) {
+        buyerRatingList.push_back(buyerRating);
+        sellerRatingList.push_back(sellerRating);
+      }
 
 /*void Member::placeBid(int itemId, int bidAmount)
 {
@@ -177,19 +180,36 @@ void Member::updatePassword(const std::string &newPassword)
     }
 }
 
-double Member::getBuyerRating() const
-{
+double Member::getBuyerRating() const {
     return buyerRating;
 }
 
-double Member::getSellerRating() const
-{
+double Member::getSellerRating() const {
     return sellerRating;
+}
+
+
+void Member::setBuyerRating(double rating) { 
+    buyerRating = rating; 
+}
+
+void Member::setSellerRating(double rating) { 
+    sellerRating = rating; 
 }
 
 std::vector<double> Member::getBuyerRatingList() const {
     return buyerRatingList;
 }
-    std::vector<double> Member::getSellerRatingList() const {
-        return sellerRatingList;
-    }
+std::vector<double> Member::getSellerRatingList() const {
+    return sellerRatingList;
+}
+
+
+double Member::getCreditPoints() const {   
+    return creditPoints; 
+}
+
+
+void Member::topUpCredits(const double &amount) { 
+    creditPoints += amount; 
+}

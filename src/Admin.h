@@ -12,8 +12,7 @@ public:
     Admin(std::string username, std::string password, UserRole role);
 
     // Admin-specific methods
-    void viewAllMembers(const std::vector<User *> &members) const;
-    void viewAllListings(const std::vector<Item *> &items) const;
+    void viewAllProfiles(const std::vector<User *> &members) const;
 };
 
 #endif // ADMIN_H
