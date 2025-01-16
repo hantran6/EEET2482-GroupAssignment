@@ -213,3 +213,7 @@ double Member::getCreditPoints() const {
 void Member::topUpCredits(const double &amount) { 
     creditPoints += amount; 
 }
+
+void Member::placeBid(Bid bid) {
+    
+}

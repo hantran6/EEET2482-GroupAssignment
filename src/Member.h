@@ -5,6 +5,7 @@
 #include "Member.h"
 #include "Utils.h"
 #include "Item.h"
+#include "Bid.h"
 #include "AuctionSystem.h"
 #include <vector>
 #include <string>
@@ -56,6 +57,7 @@ public:
     void updatePassword(const std::string &password);
 
     void topUpCredits(const double &amount);
+    void placeBid(Bid bid);
 };
 
 #endif
