@@ -4,6 +4,10 @@
 #include <vector>
 #include "User.h"
 #include "Item.h"
+#include "Utils.h"
+#include "Admin.h"
+#include "Member.h"
+
 
 class AuctionSystem
 {
@@ -27,8 +31,8 @@ public:
     void addItem(const Item &item);
 
     // Items
-    Item *getItemById(int id);
-    void removeItem(int id);
+    // Item& getItemById(int id);
+    // void removeItem(int id);
 
     // Getter
     const std::vector<User *> &getMembers() const;

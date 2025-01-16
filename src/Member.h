@@ -22,10 +22,10 @@ public:
 
     // Member-specific methods
     void placeBid(int itemId, int bidAmount);
-    void createListing(AuctionSystem &auctionSystem);
-    void editListing(AuctionSystem &auctionSystem);
-    void removeListing(AuctionSystem &auctionSystem);
-    void rateTransaction(const std::string &role, double rating);
+    // void createListing(AuctionSystem &auctionSystem);
+    // void editListing(AuctionSystem &auctionSystem);
+    // void removeListing(AuctionSystem &auctionSystem);
+    // void rateTransaction(const std::string &role, double rating);
 
 
     void viewProfile() const;

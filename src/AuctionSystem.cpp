@@ -3,10 +3,6 @@
 #include <sstream>
 #include <iostream>
 
-#include "Utils.h"
-#include "Admin.h"
-#include "Member.h"
-
 AuctionSystem::AuctionSystem() {}
 
 // Users ================================================================================================================
@@ -215,3 +211,4 @@ int AuctionSystem::generateItemId()
     static int nextItemId = 1; // Static variable to persist the value across calls
     return nextItemId++;
 }
+
