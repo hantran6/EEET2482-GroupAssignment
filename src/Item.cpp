@@ -17,7 +17,12 @@ std::string Item::getHighestBidder() const { return highestBidder; }
 std::string Item::getSellerUsername() const { return sellerUsername; }
 int Item::getMinRating() const { return minRating; }
 std::string Item::getEndDateTime() const { return endDateTime; }
+bool Item::getHasActiveBids() const { return hasActiveBids; }
+std::string Item::getStartDateTime() const { return startDateTime; }
 
 void Item::setCurrentBid(int bid) { currentBid = bid; }
 void Item::setHighestBidder(const std::string& bidder) { highestBidder = bidder; }
 void Item::setEndDateTime(const std::string& endTime) { endDateTime = endTime; }
+void Item::setHasActiveBids(bool status) { hasActiveBids = status; }
+void Item::setStartDateTime(const std::string& time) { startDateTime = time; }
+

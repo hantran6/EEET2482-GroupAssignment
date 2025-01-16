@@ -13,9 +13,105 @@ void Member::placeBid(int itemId, int bidAmount)
     std::cout << "Bid placed successfully!" << std::endl;
 }
 
-void Member::createListing(int itemId)
+void Member::createListing(AuctionSystem &auctionSystem)
 {
-    std::cout << "Listing created successfully for item ID: " << itemId << std::endl;
+    std::string name, category, description, endDateTime;
+    int startingBid, bidIncrement, minRating;
+
+    std::cout << "Enter item name: ";
+    std::getline(std::cin, name);
+    std::cout << "Enter category: ";
+    std::getline(std::cin, category);
+    std::cout << "Enter description: ";
+    std::getline(std::cin, description);
+    std::cout << "Enter starting bid: ";
+    std::cin >> startingBid;
+    std::cout << "Enter bid increment: ";
+    std::cin >> bidIncrement;
+    std::cout << "Enter minimum buyer rating: ";
+    std::cin >> minRating;
+    std::cin.ignore(); // Clear buffer
+    std::cout << "Enter auction end date & time (YYYY-MM-DD HH:MM:SS): ";
+    std::getline(std::cin, endDateTime);
+
+    int id = auctionSystem.generateItemId();
+    std::string startDateTime = Utils::getCurrentDateTime();
+
+    Item newItem(id, name, category, description, startingBid, bidIncrement, username, minRating);
+    newItem.setStartDateTime(startDateTime);
+    newItem.setEndDateTime(endDateTime);
+
+    auctionSystem.addItem(newItem);
+    Utils::showSuccess("Item listing created successfully.");
+}
+
+void Member::editListing(AuctionSystem &auctionSystem)
+{
+    int itemId;
+    std::cout << "Enter item ID to edit: ";
+    std::cin >> itemId;
+    std::cin.ignore();
+
+    Item *item = auctionSystem.getItemById(itemId);
+    if (!item || item->getSellerUsername() != username)
+    {
+        Utils::showError("Item not found or you are not the seller.");
+        return;
+    }
+    if (item->getHasActiveBids())
+    {
+        Utils::showError("Cannot edit listing. Active bids exist.");
+        return;
+    }
+
+    std::string newName, newCategory, newDescription;
+    int newStartingBid, newBidIncrement, newMinRating;
+
+    std::cout << "Enter new item name: ";
+    std::getline(std::cin, newName);
+    std::cout << "Enter new category: ";
+    std::getline(std::cin, newCategory);
+    std::cout << "Enter new description: ";
+    std::getline(std::cin, newDescription);
+    std::cout << "Enter new starting bid: ";
+    std::cin >> newStartingBid;
+    std::cout << "Enter new bid increment: ";
+    std::cin >> newBidIncrement;
+    std::cout << "Enter new minimum buyer rating: ";
+    std::cin >> newMinRating;
+    std::cin.ignore();
+
+    item->setName(newName);
+    item->setCategory(newCategory);
+    item->setDescription(newDescription);
+    item->setStartingBid(newStartingBid);
+    item->setBidIncrement(newBidIncrement);
+    item->setMinRating(newMinRating);
+
+    Utils::showSuccess("Item listing updated successfully.");
+}
+
+void Member::removeListing(AuctionSystem &auctionSystem)
+{
+    int itemId;
+    std::cout << "Enter item ID to remove: ";
+    std::cin >> itemId;
+    std::cin.ignore();
+
+    Item *item = auctionSystem.getItemById(itemId);
+    if (!item || item->getSellerUsername() != username)
+    {
+        Utils::showError("Item not found or you are not the seller.");
+        return;
+    }
+    if (item->getHasActiveBids())
+    {
+        Utils::showError("Cannot remove listing. Active bids exist.");
+        return;
+    }
+
+    auctionSystem.removeItem(itemId);
+    Utils::showSuccess("Item listing removed successfully.");
 }
 
 void Member::rateTransaction(const std::string &role, double rating)

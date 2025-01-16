@@ -9,6 +9,7 @@
 
 AuctionSystem::AuctionSystem() {}
 
+// Users ================================================================================================================
 void AuctionSystem::loadUsers(const std::string &filename)
 {
     std::ifstream inFile(filename);
@@ -73,15 +74,6 @@ void AuctionSystem::saveUsers(const std::string &filename)
     }
 
     outFile.close();
-}
-void AuctionSystem::loadItems(const std::string &filename)
-{
-    // Implementation is similar to loadUsers
-}
-
-void AuctionSystem::saveItems(const std::string &filename)
-{
-    // Implementation is similar to saveUsers
 }
 
 void AuctionSystem::registerMember()
@@ -198,14 +190,24 @@ User *AuctionSystem::loginAdmin()
     return nullptr;
 }
 
-void AuctionSystem::addItem(const Item &item)
-{
-    items.push_back(item);
-}
-
 const std::vector<User *> &AuctionSystem::getMembers() const
 {
     return members;
+}
+// Items ================================================================================================================
+void AuctionSystem::loadItems(const std::string &filename)
+{
+    // Implementation is similar to loadUsers
+}
+
+void AuctionSystem::saveItems(const std::string &filename)
+{
+    // Implementation is similar to saveUsers
+}
+
+void AuctionSystem::addItem(const Item &item)
+{
+    items.push_back(item);
 }
 
 int AuctionSystem::generateItemId()

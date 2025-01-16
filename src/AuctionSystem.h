@@ -26,6 +26,10 @@ public:
     User *loginAdmin();
     void addItem(const Item &item);
 
+    // Items
+    Item *getItemById(int id);
+    void removeItem(int id);
+
     // Getter
     const std::vector<User *> &getMembers() const;
 
