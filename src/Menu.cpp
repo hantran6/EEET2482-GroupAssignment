@@ -77,19 +77,8 @@ void displayMemberMenu(AuctionSystem &auctionSystem, Member &member)
         std::cout << "1. View Profile\n";
         std::cout << "2. Update Profile\n";
         std::cout << "3. Top Up Credit Points\n";
-
-        // As Seller
-        std::cout << "4. View Listing\n";
-        std::cout << "5. Create Listing\n";
-        std::cout << "6. Update Listing\n";
-        std::cout << "7. Delete Listing\n";
-
-        // As Buyer
-        std::cout << "8. Search for items\n";
-        std::cout << "9. View item details\n";
-        std::cout << "10. Place a bid\n";
-
-        std::cout << "11. Back to Main Menu\n";
+        std::cout << "4. Seller Actions\n";
+        std::cout << "5. Buyer Actions\n";
         std::cout << "0. Exit\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
@@ -100,24 +89,84 @@ void displayMemberMenu(AuctionSystem &auctionSystem, Member &member)
             member.viewProfile();
             break;
         case 2:
-            displayUpdateProfileMenu(member);
+            displayUpdateProfileMenu(auctionSystem, member);
             break;
         case 3:
-            // top up credit
+            member.topUpCredits(auctionSystem);
             break;
         case 4:
-            member.viewMyListings(auctionSystem);
+            displaySellerMenu(auctionSystem, member);
             break;
         case 5:
+            displayBuyerMenu(auctionSystem, member);
+            break;
+        case 0:
+            saveAndExit(auctionSystem);
+            break;
+        default:
+            Utils::showError("Invalid choice. Please try again.");
+            break;
+        }
+    } while (choice != 0);
+}
+
+void displaySellerMenu(AuctionSystem &auctionSystem, Member &member)
+{
+    int choice;
+    do
+    {
+        std::cout << "\n========== Seller Actions ==========\n";
+        std::cout << "1. View My Listings\n";
+        std::cout << "2. Create Listing\n";
+        std::cout << "3. Update Listing\n";
+        std::cout << "4. Delete Listing\n";
+        std::cout << "0. Back to Member Menu\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            member.viewMyListings(auctionSystem);
+            break;
+        case 2:
             member.createListing(auctionSystem);
             break;
-        case 6:
+        case 3:
             member.editListing(auctionSystem);
             break;
-        case 7:
+        case 4:
             member.removeListing(auctionSystem);
             break;
-        case 8:
+        case 0:
+            return; // Return to the main member menu
+        default:
+            Utils::showError("Invalid choice. Please try again.");
+            break;
+        }
+    } while (choice != 0);
+}
+
+void displayBuyerMenu(AuctionSystem &auctionSystem, Member &member)
+{
+    int choice;
+    do
+    {
+        std::cout << "\n========== Buyer Actions ==========\n";
+        std::cout << "1. View All Available Listings\n";
+        std::cout << "2. Search for Items\n";
+        std::cout << "3. View Item Details\n";
+        std::cout << "4. Place a Bid\n";
+        std::cout << "0. Back to Member Menu\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            member.viewAvailableListings(auctionSystem);
+            break;
+        case 2:
         {
             std::string name, category;
             double minCredits = 0.0, maxCredits = 0.0;
@@ -158,7 +207,7 @@ void displayMemberMenu(AuctionSystem &auctionSystem, Member &member)
             }
             break;
         }
-        case 9:
+        case 3:
         {
             int itemId;
             std::cout << "Enter item ID to view details: ";
@@ -167,19 +216,27 @@ void displayMemberMenu(AuctionSystem &auctionSystem, Member &member)
             auctionSystem.viewItemDetails(itemId);
             break;
         }
+        case 4:
+            int itemId;
+            double bidAmount;
 
-        case 11:
-            return;
+            std::cout << "Enter the item ID you want to bid on: ";
+            std::cin >> itemId;
+            std::cout << "Enter your bid amount: ";
+            std::cin >> bidAmount;
+
+            auctionSystem.placeBid(itemId, bidAmount, member);
+            break;
         case 0:
-            saveAndExit(auctionSystem);
+            return; // Return to the main member menu
         default:
-            Utils::showError("Invalid choice.Please try again.");
+            Utils::showError("Invalid choice. Please try again.");
             break;
         }
-    } while (true);
+    } while (choice != 0);
 }
 
-void displayUpdateProfileMenu(Member &member)
+void displayUpdateProfileMenu(AuctionSystem &auctionSystem, Member &member)
 {
     int choice;
     do
@@ -201,7 +258,7 @@ void displayUpdateProfileMenu(Member &member)
             std::string newFullName;
             std::cout << "Enter new full name: ";
             std::getline(std::cin, newFullName);
-            member.updateFullName(newFullName); // Delegate to Member
+            member.updateFullName(newFullName, auctionSystem); // Delegate to Member
             break;
         }
         case 2:
@@ -209,7 +266,7 @@ void displayUpdateProfileMenu(Member &member)
             std::string newPhoneNumber;
             std::cout << "Enter new phone number: ";
             std::getline(std::cin, newPhoneNumber);
-            member.updatePhoneNumber(newPhoneNumber); // Delegate to Member
+            member.updatePhoneNumber(newPhoneNumber, auctionSystem); // Delegate to Member
             break;
         }
         case 3:
@@ -217,7 +274,7 @@ void displayUpdateProfileMenu(Member &member)
             std::string newEmail;
             std::cout << "Enter new email: ";
             std::getline(std::cin, newEmail);
-            member.updateEmail(newEmail);
+            member.updateEmail(newEmail, auctionSystem);
             break;
         }
         case 4:
@@ -225,7 +282,7 @@ void displayUpdateProfileMenu(Member &member)
             std::string newPassword;
             std::cout << "Enter new password: ";
             std::getline(std::cin, newPassword);
-            member.updatePassword(newPassword);
+            member.updatePassword(newPassword, auctionSystem);
             break;
         }
         case 0:

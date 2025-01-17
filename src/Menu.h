@@ -15,7 +15,9 @@ void displayGuestMenu(AuctionSystem &auctionSystem);
 
 // Members
 void displayMemberMenu(AuctionSystem &auctionSystem, Member &member);
-void displayUpdateProfileMenu(Member &member);
+void displayUpdateProfileMenu(AuctionSystem &auctionSystem, Member &member);
+void displaySellerMenu(AuctionSystem &auctionSystem, Member &member); // Seller-specific actions
+void displayBuyerMenu(AuctionSystem &auctionSystem, Member &member);  // Buyer-specific actions
 
 // Admin
 void displayAdminMenu(AuctionSystem &auctionSystem, Admin &admin);

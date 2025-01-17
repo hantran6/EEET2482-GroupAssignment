@@ -225,6 +225,79 @@ int AuctionSystem::generateItemId()
     return maxId + 1; // Return the next available ID
 }
 
+// Bids ====================================================================================================================
+Member *AuctionSystem::getMemberByUsername(const std::string &username)
+{
+    for (auto *user : members) // Assuming members is a container of User*
+    {
+        // Use dynamic_cast to check if the User* is actually a Member*
+        Member *member = dynamic_cast<Member *>(user);
+        if (member && member->getUsername() == username) // Ensure the member is valid and matches the username
+        {
+            return member; // Return the pointer to the Member
+        }
+    }
+    return nullptr; // Return nullptr if no matching member is found
+}
+
+void AuctionSystem::placeBid(int itemId, double bidAmount, Member &newBidder)
+{
+    Item *item = getItemById(itemId);
+    if (item == nullptr)
+    {
+        Utils::showError("Item not found.");
+        return;
+    }
+
+    // Check if the bid amount is valid (must be strictly greater than current bid + increment)
+    if (bidAmount < (item->getCurrentBid() + item->getBidIncrement()))
+    {
+        Utils::showError("Bid amount is too low. Must be greater than the current bid + increment.");
+        return;
+    }
+
+    // Check if the new bidder has sufficient credit points for this bid
+    double totalActiveBids = 0.0;
+    for (int activeBidId : newBidder.getActiveBids()) // Use the getter to access activeBids
+    {
+        Item *activeItem = getItemById(activeBidId);
+        if (activeItem)
+        {
+            totalActiveBids += activeItem->getCurrentBid();
+        }
+    }
+
+    if (newBidder.getCreditPoints() < (totalActiveBids + bidAmount))
+    {
+        Utils::showError("Insufficient credit points to place this bid.");
+        return;
+    }
+
+    // Handle outbidding the current highest bidder
+    std::string currentHighestBidder = item->getHighestBidder();
+    if (!currentHighestBidder.empty() && currentHighestBidder != newBidder.getUsername())
+    {
+        Member *oldBidder = getMemberByUsername(currentHighestBidder);
+        if (oldBidder)
+        {
+            oldBidder->removeActiveBid(itemId); // Use the mutator to remove the item ID from activeBids
+        }
+    }
+
+    // Update the item's current bid and highest bidder
+    item->setCurrentBid(bidAmount);
+    item->setHighestBidder(newBidder.getUsername());
+
+    // Add the item to the new bidder's activeBids if not already there
+    if (std::find(newBidder.getActiveBids().begin(), newBidder.getActiveBids().end(), itemId) == newBidder.getActiveBids().end())
+    {
+        newBidder.addActiveBid(itemId); // Use the mutator to add the item ID to activeBids
+    }
+
+    Utils::showSuccess("Bid placed successfully!");
+    saveItems("./data/items.csv"); // Save updated item data
+}
+
 // Database ================================================================================================================
 void AuctionSystem::loadUsers(const std::string &filename)
 {

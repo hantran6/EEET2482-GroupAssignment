@@ -31,9 +31,14 @@ public:
     // Items
     void addItem(const Item &item);
     void removeItem(int id);
+
+    void viewItemDetails(int itemId);
     Item *getItemById(int id);
     std::vector<Item> searchItems(const std::string &name, const std::string &category, double minCredits, double maxCredits);
-    void viewItemDetails(int itemId);
+
+    void checkExpiredAuctions(Member &member);
+    void placeBid(int itemId, double bidAmount, Member &newBidder);
+    Member *getMemberByUsername(const std::string &username);
 
     // Getters for database access
     const std::vector<User *> &getMembers() const;

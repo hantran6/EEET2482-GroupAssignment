@@ -9,6 +9,7 @@ namespace Utils
     bool isValidPassword(const std::string &password);
     bool isValidEmail(const std::string &email);
     bool isValidUsername(const std::string &username);
+    bool isDateTimeInPast(const std::string &inputDateTime);
 
     std::string getCurrentDateTime();
 

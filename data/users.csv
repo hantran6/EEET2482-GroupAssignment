@@ -1,7 +1,5 @@
 username,password,full_name,phone,email,id_type,id_number,credit_points,buyer_rating,seller_rating,role
 admin,StrongP@ssword,,,,,,0.0,0.0,0.0,Admin
-hantran6,StrongP@ssword1,Han Tran,0987654321,hantran@gmail.com,Passport,12312321451,0,3,3,Member
-johnsmith,John@123,John Smith,0987654431,johnsmith@gmail.com,Passport,123123123,0,3,3,Member
-janedoe,JaneDoe1@,Jane Doe,213123,janedoe@gmail.com,Passport,43534617,0,3,3,Member
-emmawatson,Emma@Watson1,Emma Stones,081382932,emmawatson@gmail.com,Passport,91837412390,0,3,3,Member
-nguyenvana,nguyenvanA@1,Nguyen Van A,0981298321,nguyenvana@gmail.com,Passport,123091248,0,3,3,Member
+testuser1,testUser1@,Test User 1,091234576,testuser1@gmail.com,Passport,124125125,100000,3,3,Member
+testuser2,testUser2@,Test User 2,091294124,testuser2@gmail.com,Passport,1221451245,1.001e+06,3,3,Member
+testuser3,testUser3@,Test User 3,99812312,testuser3@gmail.com,Citizen ID,2109312321,0,3,3,Member

@@ -4,7 +4,7 @@ Item::Item(int id, const std::string &name, const std::string &category, const s
            double startingBid, double bidIncrement, const std::string &sellerUsername, double minRating)
     : id(id), name(name), category(category), description(description), startingBid(startingBid),
       bidIncrement(bidIncrement), currentBid(0), highestBidder("None"), sellerUsername(sellerUsername),
-      minRating(minRating), endDateTime("Unset") {}
+      minRating(minRating), hasActiveBids(false), startDateTime(""), endDateTime("") {}
 
 int Item::getId() const { return id; }
 std::string Item::getName() const { return name; }

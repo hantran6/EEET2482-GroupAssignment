@@ -23,7 +23,13 @@ public:
            std::string email, std::string idType, std::string idNumber, UserRole role);
 
     // Member-specific methods
-    void placeBid(int itemId, int bidAmount);
+    void topUpCredits(AuctionSystem &auctionSystem);
+    bool canPlaceBid(double newBidAmount, AuctionSystem &auctionSystem) const;
+    void placeBid(int itemId, double bidAmount, AuctionSystem &auctionSystem);
+    void addActiveBid(int itemId);
+    void removeActiveBid(int itemId);  
+
+    void viewAvailableListings(AuctionSystem &auctionSystem);
     void viewMyListings(AuctionSystem &auctionSystem);
     void createListing(AuctionSystem &auctionSystem);
     void editListing(AuctionSystem &auctionSystem);
@@ -34,6 +40,7 @@ public:
     double getCreditPoints() const;
     double getBuyerRating() const;
     double getSellerRating() const;
+    const std::vector<int>& getActiveBids() const;   
 
     // Setters
     void setCreditPoints(double points);
@@ -41,10 +48,10 @@ public:
     void setSellerRating(double rating);
 
     // Updating profiles
-    void updateFullName(const std::string &newFullName);
-    void updatePhoneNumber(const std::string &newPhoneNumber);
-    void updateEmail(const std::string &newEmail);
-    void updatePassword(const std::string &password);
+    void updateFullName(const std::string &newFullName, AuctionSystem &auctionSystem);
+    void updatePhoneNumber(const std::string &newPhoneNumber, AuctionSystem &auctionSystem);
+    void updateEmail(const std::string &newEmail, AuctionSystem &auctionSystem);
+    void updatePassword(const std::string &password, AuctionSystem &auctionSystem);
 };
 
 #endif
