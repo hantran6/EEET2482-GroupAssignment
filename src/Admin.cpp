@@ -27,8 +27,25 @@ void Admin::viewAllMembers(const std::vector<User *> &members) const
     }
 }
 
-// void Admin::viewAllListings() const
-// {
-//     std::cout << "Admin viewing all listings..." << std::endl;
-//     // Add logic to iterate and display all listings
-// }
+void Admin::viewAllListings(const std::vector<Item> &items) const {
+    std::cout << "\n========== All Listings ==========\n";
+
+    if (items.empty()) {
+        std::cout << "No items available.\n";
+        return;
+    }
+
+    for (const auto &item : items) {
+        std::cout << "ID: " << item.getId()
+                  << ", Name: " << item.getName()
+                  << ", Category: " << item.getCategory()
+                  << ", Starting Bid: " << item.getStartingBid()
+                  << ", Current Bid: " << item.getCurrentBid()
+                  << ", Seller: " << item.getSellerUsername()
+                  << ", Highest Bidder: " << (item.getHighestBidder().empty() ? "None" : item.getHighestBidder())
+                  << ", Status: " << (item.getIsActive() ? "Active" : "Concluded")
+                  << "\n";
+    }
+
+    std::cout << "==================================\n";
+}

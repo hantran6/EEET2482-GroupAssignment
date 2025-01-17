@@ -13,7 +13,7 @@ public:
 
     // Admin-specific methods
     void viewAllMembers(const std::vector<User *> &members) const;
-    void viewAllListings(const std::vector<Item *> &items) const;
+    void viewAllListings(const std::vector<Item> &items) const;
 };
 
 #endif // ADMIN_H

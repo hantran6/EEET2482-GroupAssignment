@@ -251,6 +251,25 @@ int AuctionSystem::generateItemId()
     return maxId + 1; // Return the next available ID
 }
 
+void AuctionSystem::viewLimitedDetails() const
+{
+    if (items.empty())
+    {
+        std::cout << "No items available.\n";
+        return;
+    }
+
+    std::cout << "\n========== Limited Item Details ==========\n";
+    for (const auto &item : items)
+    {
+        std::cout << "Item Name: " << item.getName() << "\n"
+                  << "Item Category: " << item.getCategory() << "\n"
+                  << "Item Description: " << item.getDescription() << "\n";
+        std::cout << "---------------------------------------\n";
+    }
+    std::cout << "==========================================\n";
+}
+
 // Bids ====================================================================================================================
 Member *AuctionSystem::getMemberByUsername(const std::string &username)
 {

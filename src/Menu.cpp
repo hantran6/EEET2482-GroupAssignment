@@ -35,7 +35,7 @@ void displayGuestMenu(AuctionSystem &auctionSystem)
         std::cout << "\n========== Guest Menu ==========\n";
         std::cout << "1. Register an account.\n";
         std::cout << "2. Browse items as a guest.\n";
-        std::cout << "3. Back to main menu.\n";
+        std::cout << "3. Back\n";
         std::cout << "0. Exit.\n";
         std::cout << "Enter your choice: ";
 
@@ -52,12 +52,10 @@ void displayGuestMenu(AuctionSystem &auctionSystem)
             break;
         }
         case 2:
-            // Display items for guests to view
-            std::cout << "Guest browsing functionality is not yet implemented.\n";
+            auctionSystem.viewLimitedDetails();
             break;
         case 3:
-            isRunning = false;
-            break;
+            return;
         case 0:
             saveAndExit(auctionSystem);
         default:
@@ -120,7 +118,8 @@ void displaySellerMenu(AuctionSystem &auctionSystem, Member &member)
         std::cout << "2. Create Listing\n";
         std::cout << "3. Update Listing\n";
         std::cout << "4. Delete Listing\n";
-        std::cout << "0. Back to Member Menu\n";
+        std::cout << "5. Back\n";
+        std::cout << "6. Exit \n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
 
@@ -138,8 +137,10 @@ void displaySellerMenu(AuctionSystem &auctionSystem, Member &member)
         case 4:
             member.removeListing(auctionSystem);
             break;
-        case 0:
-            return; // Return to the main member menu
+        case 5:
+            return;
+        case 6:
+            saveAndExit(auctionSystem);
         default:
             Utils::showError("Invalid choice. Please try again.");
             break;
@@ -157,7 +158,8 @@ void displayBuyerMenu(AuctionSystem &auctionSystem, Member &member)
         std::cout << "2. Search for Items\n";
         std::cout << "3. View Item Details\n";
         std::cout << "4. Place a Bid\n";
-        std::cout << "0. Back to Member Menu\n";
+        std::cout << "5. Back\n";
+        std::cout << "0. Exit \n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
 
@@ -227,8 +229,10 @@ void displayBuyerMenu(AuctionSystem &auctionSystem, Member &member)
 
             auctionSystem.placeBid(itemId, bidAmount, member);
             break;
-        case 0:
+        case 5:
             return; // Return to the main member menu
+        case 0:
+            saveAndExit(auctionSystem);
         default:
             Utils::showError("Invalid choice. Please try again.");
             break;
@@ -303,7 +307,7 @@ void displayAdminMenu(AuctionSystem &auctionSystem, Admin &admin)
         std::cout << "\n========== Admin Menu ==========\n";
         std::cout << "1. View All Members\n";
         std::cout << "2. View All Listings\n";
-        std::cout << "3. Back to Main Menu\n";
+        std::cout << "3. Back\n";
         std::cout << "0. Exit\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
@@ -314,10 +318,10 @@ void displayAdminMenu(AuctionSystem &auctionSystem, Admin &admin)
             admin.viewAllMembers(auctionSystem.getMembers());
             break;
         case 2:
-            // Listings logic
+            admin.viewAllListings(auctionSystem.getItems());
             break;
         case 3:
-            return; // Return to the main menu
+            return;
         case 0:
             saveAndExit(auctionSystem);
         default:

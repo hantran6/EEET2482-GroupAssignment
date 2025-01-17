@@ -33,6 +33,7 @@ public:
     void removeItem(int id);
 
     void viewItemDetails(int itemId);
+    void viewLimitedDetails() const;
     Item *getItemById(int id);
     std::vector<Item> searchItems(const std::string &name, const std::string &category, double minCredits, double maxCredits);
 
