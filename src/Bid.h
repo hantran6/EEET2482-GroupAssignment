@@ -25,6 +25,8 @@ class Bid {
         std::string getBidderUsername();
         void setBidderUsername(std::string bidderUsername);
 
+        bool checkIncrement(Item item, double amount);
+
 
       
 

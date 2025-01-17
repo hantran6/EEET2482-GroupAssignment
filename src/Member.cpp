@@ -1,4 +1,5 @@
 #include "Member.h"
+#include "AuctionSystem.h"
 #include <iostream>
 
 Member::Member(std::string username, std::string password, std::string fullName,
@@ -214,6 +215,43 @@ void Member::topUpCredits(const double &amount) {
     creditPoints += amount; 
 }
 
+//fuction to place a bid
 void Member::placeBid(Bid bid) {
+    // //get item by id that we are bidding on and get the minimum rating required to bid
+    //if(this->getBuyerRating() >= getItemById(bid.getItemId()).getMinRating()) {
+        // //check if bidding amount is higher than current highest bid for this item 
+        //if(getItemById(bid.getItemById()).getCurrentHighestBid() < bid.getBidAmount()) {
+            // //check if correct increment 
+            //if(bid.checkIncrement(bid.getItemById(), bid.getBidAmount())) {
+
+                /*
+                vector<Item> ongoingAuctions = getItemListFromDatabase();
+                double totalBiddingAmount = 0.0;
+                for(int i < 0; i < ongoingAuctions.size(); i++) {
+                    if(ongoingAuctions[i].getHighestBidder != this->username) {
+                        continue;
+                    } else {
+                        totalBiddingAmount += ongoingAuctions[i].getCurrentHighestBid();
+                    }
+                }
+                if(totalBiddingAmount > this->getCreditPoints()) {
+                    std::cout << "Cannot place bid. Insufficient amount of credit points to place another bid."
+                } else {
+                    bid.getItembyId().setCurrentHighestBid(amount);
+                    bid.getItembyId().setCurrentHighestBidder(this->username);
+                    //save that bid into the database
+                }
+
+                */
+
+                /*
+                //for the bids database
+                bids database -> username -> get all bids for the user -> getItemById() for all the bids -> if(item.auctionInProcess) -> vector<Item> itemList.push_back(item)
+
+                */
+            //} //end of if condition for checking right increment
+        //} //end of if for checking amount
+    //} //end of if condition for checking if minimum rating is met
+
     
 }

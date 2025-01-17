@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "Bid.h"
 #include "Item.h"
 
@@ -29,4 +30,13 @@ std::string Bid::getBidderUsername() {
 
 void Bid::setBidderUsername(std::string bidderUsername) {
     this->bidderUsername = bidderUsername;
+}
+
+bool Bid::checkIncrement(Item item, double amount) {
+    double difference = amount - item.getCurrentBid();
+    if(std::fmod(difference, item.getBidIncrement()) == 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
