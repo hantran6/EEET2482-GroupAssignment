@@ -338,19 +338,18 @@ void Member::viewAvailableListings(AuctionSystem &auctionSystem)
 
     std::cout << "\n========== All Available Listings ==========\n";
 
-    // Get the current date and time
-    std::string currentDateTime = Utils::getCurrentDateTime();
     bool hasListings = false; // Track if any listings are displayed
 
-    // Iterate through each item and apply filters
     for (const auto &item : items)
     {
-        // Skip items where:
-        // 1. The auction end time is in the past
-        // 2. The current user's buyer rating is less than the minimum required rating
-        // 3. The current user is not the seller
-        if (Utils::isDateTimeInPast(item.getEndDateTime()) ||
-            (item.getSellerUsername() != username && buyerRating < item.getMinRating()))
+        // Skip items where the current user is the seller
+        if (item.getSellerUsername() == username)
+        {
+            continue; // Exclude their own items
+        }
+
+        // Skip items where the buyer rating is less than the required minimum
+        if (buyerRating < item.getMinRating())
         {
             continue;
         }
@@ -367,24 +366,20 @@ void Member::viewAvailableListings(AuctionSystem &auctionSystem)
                   << "-----------------------------------------\n";
     }
 
-    // If no listings are available
     if (!hasListings)
     {
         std::cout << "No listings available that match your criteria.\n";
     }
 }
 
-const std::vector<int> &Member::getActiveBids() const
-{
-    return activeBids;
-}
-
+// Add item ID to activeBids
 void Member::addActiveBid(int itemId)
 {
     activeBids.push_back(itemId);
 }
 
-void Member::removeActiveBid(int itemId)
+// Remove item ID from activeBids
+void  Member::removeActiveBid(int itemId)
 {
     auto it = std::find(activeBids.begin(), activeBids.end(), itemId);
     if (it != activeBids.end())
@@ -393,6 +388,17 @@ void Member::removeActiveBid(int itemId)
     }
 }
 
+// Check if an item ID exists in activeBids
+bool  Member::hasActiveBid(int itemId) const
+{
+    return std::find(activeBids.begin(), activeBids.end(), itemId) != activeBids.end();
+}
+
+// Get all active bids
+const std::vector<int> &Member::getActiveBids() const
+{
+    return activeBids;
+}
 // Helper method to check if a member can place a bid
 // bool Member::canPlaceBid(double newBidAmount, AuctionSystem &auctionSystem) const
 // {

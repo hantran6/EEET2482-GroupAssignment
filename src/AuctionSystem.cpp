@@ -249,7 +249,21 @@ void AuctionSystem::placeBid(int itemId, double bidAmount, Member &newBidder)
         return;
     }
 
-    // Check if the bid amount is valid (must be strictly greater than current bid + increment)
+    // Check if the new bidder is the seller
+    if (item->getSellerUsername() == newBidder.getUsername())
+    {
+        Utils::showError("You cannot bid on your own items.");
+        return;
+    }
+
+    // Check if the new bidder is the highest bidder
+    if (item->getHighestBidder() == newBidder.getUsername())
+    {
+        Utils::showError("You are currently the highest bidder! No need to bid again.");
+        return;
+    }
+
+    // Check if the bid amount is valid (greater than the current bid + increment)
     if (bidAmount < (item->getCurrentBid() + item->getBidIncrement()))
     {
         Utils::showError("Bid amount is too low. Must be greater than the current bid + increment.");
@@ -258,7 +272,7 @@ void AuctionSystem::placeBid(int itemId, double bidAmount, Member &newBidder)
 
     // Check if the new bidder has sufficient credit points for this bid
     double totalActiveBids = 0.0;
-    for (int activeBidId : newBidder.getActiveBids()) // Use the getter to access activeBids
+    for (int activeBidId : newBidder.getActiveBids()) // Use the accessor method
     {
         Item *activeItem = getItemById(activeBidId);
         if (activeItem)
@@ -280,7 +294,7 @@ void AuctionSystem::placeBid(int itemId, double bidAmount, Member &newBidder)
         Member *oldBidder = getMemberByUsername(currentHighestBidder);
         if (oldBidder)
         {
-            oldBidder->removeActiveBid(itemId); // Use the mutator to remove the item ID from activeBids
+            oldBidder->removeActiveBid(itemId); // Use removeActiveBid method
         }
     }
 
@@ -289,9 +303,9 @@ void AuctionSystem::placeBid(int itemId, double bidAmount, Member &newBidder)
     item->setHighestBidder(newBidder.getUsername());
 
     // Add the item to the new bidder's activeBids if not already there
-    if (std::find(newBidder.getActiveBids().begin(), newBidder.getActiveBids().end(), itemId) == newBidder.getActiveBids().end())
+    if (!newBidder.hasActiveBid(itemId)) // Use hasActiveBid method
     {
-        newBidder.addActiveBid(itemId); // Use the mutator to add the item ID to activeBids
+        newBidder.addActiveBid(itemId); // Use addActiveBid method
     }
 
     Utils::showSuccess("Bid placed successfully!");

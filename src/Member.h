@@ -27,7 +27,8 @@ public:
     bool canPlaceBid(double newBidAmount, AuctionSystem &auctionSystem) const;
     void placeBid(int itemId, double bidAmount, AuctionSystem &auctionSystem);
     void addActiveBid(int itemId);
-    void removeActiveBid(int itemId);  
+    void removeActiveBid(int itemId);
+    bool hasActiveBid(int itemId) const;
 
     void viewAvailableListings(AuctionSystem &auctionSystem);
     void viewMyListings(AuctionSystem &auctionSystem);
@@ -40,7 +41,7 @@ public:
     double getCreditPoints() const;
     double getBuyerRating() const;
     double getSellerRating() const;
-    const std::vector<int>& getActiveBids() const;   
+    const std::vector<int> &getActiveBids() const;
 
     // Setters
     void setCreditPoints(double points);

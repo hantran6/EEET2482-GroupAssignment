@@ -1,5 +1,4 @@
 username,password,full_name,phone,email,id_type,id_number,credit_points,buyer_rating,seller_rating,role
 admin,StrongP@ssword,,,,,,0.0,0.0,0.0,Admin
-testuser1,testUser1@,Test User 1,091234576,testuser1@gmail.com,Passport,124125125,100000,3,3,Member
-testuser2,testUser2@,Test User 2,091294124,testuser2@gmail.com,Passport,1221451245,1.001e+06,3,3,Member
-testuser3,testUser3@,Test User 3,99812312,testuser3@gmail.com,Citizen ID,2109312321,0,3,3,Member
+testuser1,password123,John Doe,1234567890,john.doe@example.com,Passport,P1234567,15000,4.5,3.5,Member
+testuser2,password123,Jane Smith,0987654321,jane.smith@example.com,Citizen ID,C9876543,8000,4.8,4.2,Member
