@@ -379,7 +379,7 @@ void Member::addActiveBid(int itemId)
 }
 
 // Remove item ID from activeBids
-void  Member::removeActiveBid(int itemId)
+void Member::removeActiveBid(int itemId)
 {
     auto it = std::find(activeBids.begin(), activeBids.end(), itemId);
     if (it != activeBids.end())
@@ -389,7 +389,7 @@ void  Member::removeActiveBid(int itemId)
 }
 
 // Check if an item ID exists in activeBids
-bool  Member::hasActiveBid(int itemId) const
+bool Member::hasActiveBid(int itemId) const
 {
     return std::find(activeBids.begin(), activeBids.end(), itemId) != activeBids.end();
 }
@@ -450,8 +450,17 @@ const std::vector<int> &Member::getActiveBids() const
 //     Utils::showSuccess("Bid placed successfully!");
 // }
 
-// Getter and setters ====================================================================================================================================
+// Rating ================================================================================================================================================
+void Member::addSellerRating(int rating)
+{
+    sellerRatings.push_back(rating);
+}
 
+void Member::addBuyerRating(int rating)
+{
+    buyerRatings.push_back(rating);
+}
+// Getter and setters ====================================================================================================================================
 // Getter for creditPoints
 double Member::getCreditPoints() const
 {

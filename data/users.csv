@@ -1,4 +1,5 @@
-username,password,full_name,phone,email,id_type,id_number,credit_points,buyer_rating,seller_rating,role
-admin,StrongP@ssword,,,,,,0.0,0.0,0.0,Admin
-testuser1,password123,John Doe,1234567890,john.doe@example.com,Passport,P1234567,15000,4.5,3.5,Member
-testuser2,password123,Jane Smith,0987654321,jane.smith@example.com,Citizen ID,C9876543,8000,4.8,4.2,Member
+username,password,full_name,phone,email,id_type,id_number,credit_points,buyer_rating,seller_rating,seller_ratings,buyer_ratings,role
+admin,StrongP@ssword,,,,,,0.0,0.0,0.0,"[]","[]",Admin
+user1,StrongP@ssword1,User 1,098127843,user1@gmail.com,Passport,12941234124,1000,3,3,"[4]","[]",Member
+user2,StrongP@ssword2,User 2,128931293,user2@gmail.com,Passport,123125451,2000,3,3,"[]","[]",Member
+user3,StrongP@ssword3,User 3,12409129,user3@gmail.com,Passport,129591285,4000,3,3,"[]","[5]",Member

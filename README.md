@@ -9,6 +9,7 @@ Advanced Programming Techniques course - FINAL GROUP ASSIGNMENT
 3. Run the .exe: ./build/AuctionApp.exe
 
 Admin Account credentials (no registration allowed):
-
-1. admin: admin
-2. password: adminP@ssword1
+1. Please put this at the second lines of the users.csv if it doesn't already there:
+admin,StrongP@ssword1,,,,,,0.0,0.0,0.0,"[]","[]",Admin
+2. The admin credentials: username = admin, password = StrongP@ssword1
+3. You can change these two in the users.csv as you like, but the rest have to be the same.

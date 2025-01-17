@@ -20,6 +20,9 @@ std::string Item::getEndDateTime() const { return endDateTime; }
 bool Item::getHasActiveBids() const { return hasActiveBids; }
 std::string Item::getStartDateTime() const { return startDateTime; }
 
+bool Item::getIsActive() const { return isActive; }
+void Item::setIsActive(bool status) { isActive = status; }
+
 void Item::setName(const std::string &newName)
 {
   this->name = newName;

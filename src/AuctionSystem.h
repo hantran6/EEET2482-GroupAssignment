@@ -46,6 +46,11 @@ public:
 
     int generateItemId();
     void setCurrentUser();
+
+    // ends the auctions, complete all payment transfer and udpate status of listing
+    void concludeAuction(int itemId);
+    void autoConcludeAuctions(const std::string &loggedInUsername);
+    void handleRatings(Member &member);
 };
 
 #endif // AUCTIONSYSTEM_H

@@ -97,6 +97,16 @@ User *AuctionSystem::loginMember()
             if (user->getRole() == UserRole::Member)
             {
                 Utils::showSuccess("Login successful! Welcome, " + username);
+
+                // Conclude auctions and prompt for ratings
+                autoConcludeAuctions(username);
+
+                Member *member = dynamic_cast<Member *>(user);
+                if (member)
+                {
+                    handleRatings(*member); // Prompt for ratings
+                }
+
                 return user; // Return the User* directly
             }
         }
@@ -105,6 +115,22 @@ User *AuctionSystem::loginMember()
     return nullptr;
 }
 
+void AuctionSystem::autoConcludeAuctions(const std::string &loggedInUsername)
+{
+    std::string currentDateTime = Utils::getCurrentDateTime();
+
+    for (auto &item : items)
+    {
+        if (item.getIsActive() && Utils::isDateTimeInPast(item.getEndDateTime()))
+        {
+            // Conclude only if the logged-in user is involved
+            if (item.getHighestBidder() == loggedInUsername || item.getSellerUsername() == loggedInUsername)
+            {
+                concludeAuction(item.getId());
+            }
+        }
+    }
+}
 User *AuctionSystem::loginAdmin()
 {
     std::string username, password;
@@ -312,7 +338,134 @@ void AuctionSystem::placeBid(int itemId, double bidAmount, Member &newBidder)
     saveItems("./data/items.csv"); // Save updated item data
 }
 
+void AuctionSystem::concludeAuction(int itemId)
+{
+    Item *item = getItemById(itemId);
+    if (!item)
+        return; // Item not found
+
+    if (!item->getIsActive())
+        return; // Already concluded
+
+    item->setIsActive(false); // Mark auction as concluded
+
+    if (item->getHighestBidder().empty())
+    {
+        Utils::showInfo("No bids placed. Auction concluded with no winner.");
+        saveItems("./data/items.csv");
+        return; // No further action needed
+    }
+
+    // Handle auctions with bids
+    std::string highestBidderUsername = item->getHighestBidder();
+    Member *seller = getMemberByUsername(item->getSellerUsername());
+    Member *highestBidder = getMemberByUsername(highestBidderUsername);
+
+    if (seller && highestBidder)
+    {
+        double winningBid = item->getCurrentBid();
+
+        // Deduct from the highest bidder
+        highestBidder->setCreditPoints(highestBidder->getCreditPoints() - winningBid);
+
+        // Add to the seller
+        seller->setCreditPoints(seller->getCreditPoints() + winningBid);
+
+        Utils::showSuccess("Auction concluded: Credits transferred.");
+    }
+
+    saveItems("./data/items.csv");
+}
+
+// Rating =================================================================================================================
+void AuctionSystem::handleRatings(Member &member)
+{
+    for (auto &item : items)
+    {
+        if (!item.getIsActive())
+        {
+            // Skip auctions without bids
+            if (item.getHighestBidder().empty())
+                continue;
+
+            // If the user is the highest bidder, prompt to rate the seller
+            if (item.getHighestBidder() == member.getUsername())
+            {
+                std::cout << "You won the auction for item: " << item.getName() << "!\n";
+                Member *seller = getMemberByUsername(item.getSellerUsername());
+                if (seller)
+                {
+                    int rating;
+                    do
+                    {
+                        std::cout << "Please rate the seller " << seller->getFullName() << " (1-5): ";
+                        std::cin >> rating;
+                    } while (rating < 1 || rating > 5);
+                    seller->addSellerRating(rating);
+                }
+            }
+
+            // If the user is the seller, prompt to rate the highest bidder
+            if (item.getSellerUsername() == member.getUsername())
+            {
+                std::cout << "Your item \"" << item.getName() << "\" was sold!\n";
+                Member *buyer = getMemberByUsername(item.getHighestBidder());
+                if (buyer)
+                {
+                    int rating;
+                    do
+                    {
+                        std::cout << "Please rate the buyer (1-5): ";
+                        std::cin >> rating;
+                    } while (rating < 1 || rating > 5);
+                    buyer->addBuyerRating(rating);
+                }
+            }
+        }
+    }
+
+    saveUsers("./data/users.csv");
+}
+
 // Database ================================================================================================================
+std::vector<int> deserializeRatings(const std::string &ratingsString)
+{
+    std::vector<int> ratings;
+
+    // Remove enclosing quotes if present
+    std::string cleanString = ratingsString;
+    if (cleanString.front() == '"' && cleanString.back() == '"')
+    {
+        cleanString = cleanString.substr(1, cleanString.size() - 2);
+    }
+
+    // Ensure the string is valid (starts with "[" and ends with "]")
+    if (cleanString.size() < 2 || cleanString.front() != '[' || cleanString.back() != ']')
+    {
+        return ratings; // Return an empty vector if invalid
+    }
+
+    // Extract the content inside the brackets
+    std::string content = cleanString.substr(1, cleanString.size() - 2);
+    std::istringstream ss(content);
+    std::string token;
+
+    // Split the content by commas and convert to integers
+    while (std::getline(ss, token, ','))
+    {
+        try
+        {
+            ratings.push_back(std::stoi(token)); // Convert to int and add to vector
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error parsing rating: " << token << "\n";
+        }
+    }
+
+    return ratings;
+}
+
 void AuctionSystem::loadUsers(const std::string &filename)
 {
     std::ifstream inFile(filename);
@@ -322,20 +475,38 @@ void AuctionSystem::loadUsers(const std::string &filename)
         return;
     }
 
-    std::string line, word;
+    std::string line;
     std::getline(inFile, line); // Skip header
     while (std::getline(inFile, line))
     {
         std::istringstream ss(line);
         std::vector<std::string> fields;
-        while (std::getline(ss, word, ','))
-        {
-            fields.push_back(word);
-        }
+        std::string word;
+        bool insideQuotes = false;
+        std::string field;
 
-        if (fields.size() == 11) // Ensure all fields are present
+        // Custom logic to handle quoted fields
+        for (char c : line)
         {
-            UserRole role = (fields[10] == "Admin") ? UserRole::Admin : UserRole::Member;
+            if (c == '"')
+            {
+                insideQuotes = !insideQuotes;
+            }
+            else if (c == ',' && !insideQuotes)
+            {
+                fields.push_back(field);
+                field.clear();
+            }
+            else
+            {
+                field += c;
+            }
+        }
+        fields.push_back(field);
+
+        if (fields.size() == 13)
+        { // Ensure all fields are present
+            UserRole role = (fields[12] == "Admin") ? UserRole::Admin : UserRole::Member;
 
             if (role == UserRole::Member)
             {
@@ -344,6 +515,8 @@ void AuctionSystem::loadUsers(const std::string &filename)
                 member->setCreditPoints(std::stod(fields[7]));
                 member->setBuyerRating(std::stod(fields[8]));
                 member->setSellerRating(std::stod(fields[9]));
+                member->setSellerRatings(deserializeRatings(fields[10]));
+                member->setBuyerRatings(deserializeRatings(fields[11]));
                 members.push_back(member); // Store Member object
             }
             else if (role == UserRole::Admin)
@@ -352,9 +525,29 @@ void AuctionSystem::loadUsers(const std::string &filename)
                 members.push_back(admin); // Store Admin object
             }
         }
+        else
+        {
+            std::cerr << "Error: Invalid line format in users.csv: " << line << "\n";
+        }
     }
 
     inFile.close();
+}
+
+std::string serializeRatings(const std::vector<int> &ratings)
+{
+    std::ostringstream oss;
+    oss << "[";
+    for (size_t i = 0; i < ratings.size(); ++i)
+    {
+        oss << ratings[i];
+        if (i < ratings.size() - 1)
+        {
+            oss << ","; // Add a comma between ratings
+        }
+    }
+    oss << "]";
+    return oss.str();
 }
 
 void AuctionSystem::saveUsers(const std::string &filename)
@@ -366,23 +559,37 @@ void AuctionSystem::saveUsers(const std::string &filename)
         return;
     }
 
-    outFile << "username,password,full_name,phone,email,id_type,id_number,credit_points,buyer_rating,seller_rating,role\n";
+    outFile << "username,password,full_name,phone,email,id_type,id_number,credit_points,buyer_rating,seller_rating,seller_ratings,buyer_ratings,role\n";
 
     for (const auto &user : members)
     {
         if (user->getRole() == UserRole::Member)
         {
             Member *member = dynamic_cast<Member *>(user);
-            outFile << member->getUsername() << "," << member->getPassword() << "," << member->getFullName() << ","
-                    << member->getPhoneNumber() << "," << member->getEmail() << "," << member->getIdType() << ","
-                    << member->getIdNumber() << "," << member->getCreditPoints() << "," << member->getBuyerRating() << ","
-                    << member->getSellerRating() << ",Member\n";
+            outFile << member->getUsername() << ","
+                    << member->getPassword() << ","
+                    << member->getFullName() << ","
+                    << member->getPhoneNumber() << ","
+                    << member->getEmail() << ","
+                    << member->getIdType() << ","
+                    << member->getIdNumber() << ","
+                    << member->getCreditPoints() << ","
+                    << member->getBuyerRating() << ","
+                    << member->getSellerRating() << ","
+                    << "\"" << serializeRatings(member->getSellerRatings()) << "\","
+                    << "\"" << serializeRatings(member->getBuyerRatings()) << "\","
+                    << "Member\n";
         }
         else if (user->getRole() == UserRole::Admin)
         {
-            outFile << user->getUsername() << "," << user->getPassword() << "," << user->getFullName() << ","
-                    << user->getPhoneNumber() << "," << user->getEmail() << "," << user->getIdType() << ","
-                    << user->getIdNumber() << ",0.0,0.0,0.0,Admin\n";
+            outFile << user->getUsername() << ","
+                    << user->getPassword() << ","
+                    << user->getFullName() << ","
+                    << user->getPhoneNumber() << ","
+                    << user->getEmail() << ","
+                    << user->getIdType() << ","
+                    << user->getIdNumber() << ","
+                    << "0.0,0.0,0.0,\"[]\",\"[]\",Admin\n";
         }
     }
 
@@ -409,8 +616,8 @@ void AuctionSystem::loadItems(const std::string &filename)
             fields.push_back(word);
         }
 
-        if (fields.size() == 11) // Ensure all fields are present
-        {
+        if (fields.size() == 12)
+        { // Ensure all fields are present
             int id = std::stoi(fields[0]);
             std::string name = fields[1];
             std::string category = fields[2];
@@ -422,18 +629,17 @@ void AuctionSystem::loadItems(const std::string &filename)
             std::string seller = fields[8];
             double minRating = std::stod(fields[9]);
             std::string endDateTime = fields[10];
+            bool isActive = fields[11] == "1";
 
             // Create and populate the Item object
             Item item(id, name, category, description, startingBid, bidIncrement, seller, minRating);
             item.setCurrentBid(currentBid);
             item.setHighestBidder(highestBidder);
             item.setEndDateTime(endDateTime);
+            item.setIsActive(isActive);
 
             // Add the item to the list
             items.push_back(item);
-
-            // Debugging message
-            std::cout << "Loaded item: " << name << " (ID: " << id << ")\n";
         }
     }
     inFile.close();
@@ -441,17 +647,15 @@ void AuctionSystem::loadItems(const std::string &filename)
 
 void AuctionSystem::saveItems(const std::string &filename)
 {
-    std::ofstream outFile(filename); // Open file in write mode
+    std::ofstream outFile(filename);
     if (!outFile)
     {
         std::cerr << "Error: Could not open file for saving items.\n";
         return;
     }
 
-    // Write header
-    outFile << "id,name,category,description,starting_bid,bid_increment,current_bid,highest_bidder,seller,min_rating,end_date_time\n";
+    outFile << "id,name,category,description,starting_bid,bid_increment,current_bid,highest_bidder,seller,min_rating,end_date_time,is_active\n";
 
-    // Write all items in memory to the file
     for (const auto &item : items)
     {
         outFile << item.getId() << ","
@@ -464,7 +668,8 @@ void AuctionSystem::saveItems(const std::string &filename)
                 << item.getHighestBidder() << ","
                 << item.getSellerUsername() << ","
                 << item.getMinRating() << ","
-                << item.getEndDateTime() << "\n";
+                << item.getEndDateTime() << ","
+                << (item.getIsActive() ? "1" : "0") << "\n";
     }
 
     outFile.close();
