@@ -18,8 +18,8 @@ void Admin::viewAllProfiles(const std::vector<User *> &members) const
             if (member)
             {
                 std::cout << ", Credit Points: " << member->getCreditPoints()
-                          << ", Buyer Rating: " << member->getBuyerRating()
-                          << ", Seller Rating: " << member->getSellerRating();
+                          << ", Buyer Rating: " << member->getBuyerRatingScore()
+                          << ", Seller Rating: " << member->getSellerRatingScore();
             }
         }
 
