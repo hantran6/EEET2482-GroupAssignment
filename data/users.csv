@@ -2,3 +2,4 @@ username,password,full_name,phone,email,id_type,id_number,credit_points,buyer_ra
 admin,StrongP@ssword,,,,,,0.0,0.0,0.0,Admin
 testuser1,password123,John Doe,1234567890,john.doe@example.com,Passport,P1234567,15000,4.5,3.5,Member
 testuser2,password123,Jane Smith,0987654321,jane.smith@example.com,Citizen ID,C9876543,8000,4.8,4.2,Member
+hyfjyjyt,fdfdFDFD82!!_,Polina Rybak,98765432345678,r@gmail.com,passport,192929292,0,3,3,Member

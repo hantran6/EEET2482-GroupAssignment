@@ -23,6 +23,7 @@ public:
     void loadItems(const std::string &filename);
     void saveItems(const std::string &filename);
 
+
     // Core functionality
     void registerMember();
     User *loginMember();
@@ -31,6 +32,7 @@ public:
     // Items
     void addItem(const Item &item);
     void removeItem(int id);
+    void viewLimitedInfoListing();
 
     void viewItemDetails(int itemId);
     Item *getItemById(int id);

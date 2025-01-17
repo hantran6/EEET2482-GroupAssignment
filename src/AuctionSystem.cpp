@@ -312,6 +312,19 @@ void AuctionSystem::placeBid(int itemId, double bidAmount, Member &newBidder)
     saveItems("./data/items.csv"); // Save updated item data
 }
 
+void AuctionSystem::viewLimitedInfoListing()
+{
+    std::cout << "\n========== Limited Info Listings ==========\n";
+    for (const auto &item : items)
+    {
+        std::cout << "Item ID: " << item.getId() << "\n"
+                  << "Name: " << item.getName() << "\n"
+                  << "Category: " << item.getCategory() << "\n"
+                  << "Starting Bid: " << item.getStartingBid() << " CP\n"
+                  << "------------------------------------------\n";
+    }
+}
+
 // Database ================================================================================================================
 void AuctionSystem::loadUsers(const std::string &filename)
 {

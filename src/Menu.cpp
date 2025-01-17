@@ -53,7 +53,7 @@ void displayGuestMenu(AuctionSystem &auctionSystem)
         }
         case 2:
             // Display items for guests to view
-            std::cout << "Guest browsing functionality is not yet implemented.\n";
+            auctionSystem.viewLimitedInfoListing();
             break;
         case 3:
             isRunning = false;
