@@ -1,1 +1,4 @@
 id,name,category,description,starting_bid,bid_increment,current_bid,highest_bidder,seller,min_rating,end_date_time
+1,Item 1,Electronics,High-quality headphones,5000,500,7000,testuser2,testuser1,3,2025-02-01 12:00:00
+2,Item 2,Books,First-edition novel,10000,100,10000,,testuser2,4.5,2025-02-15 18:00:00
+3,Item 3,Home Decor,Vintage lamp,2000,200,2200,testuser1,testuser2,4,2025-02-28 20:00:00

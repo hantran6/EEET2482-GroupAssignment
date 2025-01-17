@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <ctime>
+#include <iomanip>
 #include <sstream>
 
 namespace Utils
@@ -70,18 +71,26 @@ namespace Utils
     std::string getCurrentDateTime()
     {
         std::time_t now = std::time(nullptr);
-        std::tm *localTime = std::localtime(&now);
+        std::tm *ltm = std::localtime(&now);
+
         std::ostringstream oss;
-        oss << (localTime->tm_year + 1900) << "-"
-            << (localTime->tm_mon + 1) << "-"
-            << localTime->tm_mday << " "
-            << localTime->tm_hour << ":"
-            << localTime->tm_min << ":"
-            << localTime->tm_sec;
+        oss << std::put_time(ltm, "%Y-%m-%d %H:%M:%S");
         return oss.str();
     }
 
-    
+    bool isDateTimeInPast(const std::string &inputDateTime)
+    {
+        std::time_t now = std::time(nullptr);
+
+        std::tm inputTm{};
+        std::istringstream ss(inputDateTime);
+        ss >> std::get_time(&inputTm, "%Y-%m-%d %H:%M:%S");
+
+        std::time_t inputTime = std::mktime(&inputTm);
+
+        return inputTime <= now;
+    }
+
     void showError(const std::string &message)
     {
         std::cout << "\n[ERROR] " << message << "\n\n";

@@ -45,4 +45,5 @@ public:
     bool validatePassword(const std::string &password) const;
 };
 
+
 #endif

@@ -8,7 +8,6 @@
 #include "Admin.h"
 #include "Member.h"
 
-
 class AuctionSystem
 {
 private:
@@ -28,16 +27,25 @@ public:
     void registerMember();
     User *loginMember();
     User *loginAdmin();
-    void addItem(const Item &item);
 
     // Items
-    // Item& getItemById(int id);
-    // void removeItem(int id);
+    void addItem(const Item &item);
+    void removeItem(int id);
 
-    // Getter
+    void viewItemDetails(int itemId);
+    Item *getItemById(int id);
+    std::vector<Item> searchItems(const std::string &name, const std::string &category, double minCredits, double maxCredits);
+
+    void checkExpiredAuctions(Member &member);
+    void placeBid(int itemId, double bidAmount, Member &newBidder);
+    Member *getMemberByUsername(const std::string &username);
+
+    // Getters for database access
     const std::vector<User *> &getMembers() const;
+    const std::vector<Item> &getItems() const;
 
     int generateItemId();
+    void setCurrentUser();
 };
 
 #endif // AUCTIONSYSTEM_H

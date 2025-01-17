@@ -10,11 +10,13 @@
 #include <vector>
 #include <string>
 
+class AuctionSystem;
+
 class Member : public User
 {
 private:
     std::vector<int> activeBids; // Track item IDs with active bids
-    //rating that a buyer receives
+    double creditPoints;
     double buyerRating;
     //rating that a seller receives
     double sellerRating;
@@ -25,39 +27,39 @@ private:
 
 public:
     Member(std::string username, std::string password, std::string fullName, std::string phoneNumber,
-           std::string email, std::string idType, std::string idNumber, UserRole(role));
+           std::string email, std::string idType, std::string idNumber, UserRole role);
 
     // Member-specific methods
-    void placeBid(int auctionId, int itemId, int bidAmount);
-    // void createListing(AuctionSystem &auctionSystem);
-    // void editListing(AuctionSystem &auctionSystem);
-    // void removeListing(AuctionSystem &auctionSystem);
-    // void rateTransaction(const std::string &role, double rating);
+    void topUpCredits(AuctionSystem &auctionSystem);
+    bool canPlaceBid(double newBidAmount, AuctionSystem &auctionSystem) const;
+    void placeBid(int itemId, double bidAmount, AuctionSystem &auctionSystem);
+    void addActiveBid(int itemId);
+    void removeActiveBid(int itemId);
+    bool hasActiveBid(int itemId) const;
 
-
+    void viewAvailableListings(AuctionSystem &auctionSystem);
+    void viewMyListings(AuctionSystem &auctionSystem);
+    void createListing(AuctionSystem &auctionSystem);
+    void editListing(AuctionSystem &auctionSystem);
+    void removeListing(AuctionSystem &auctionSystem);
     void viewProfile() const;
 
     // Getters
+    double getCreditPoints() const;
     double getBuyerRating() const;
     double getSellerRating() const;
-    double getCreditPoints() const;
+    const std::vector<int> &getActiveBids() const;
 
-    std::vector<double> getBuyerRatingList() const;
-    std::vector<double> getSellerRatingList() const;
-
-    //Setter
+    // Setters
+    void setCreditPoints(double points);
     void setBuyerRating(double rating);
     void setSellerRating(double rating);
 
-
     // Updating profiles
-    void updateFullName(const std::string &newFullName);
-    void updatePhoneNumber(const std::string &newPhoneNumber);
-    void updateEmail(const std::string &newEmail);
-    void updatePassword(const std::string &password);
-
-    void topUpCredits(const double &amount);
-    void placeBid(Bid bid);
+    void updateFullName(const std::string &newFullName, AuctionSystem &auctionSystem);
+    void updatePhoneNumber(const std::string &newPhoneNumber, AuctionSystem &auctionSystem);
+    void updateEmail(const std::string &newEmail, AuctionSystem &auctionSystem);
+    void updatePassword(const std::string &password, AuctionSystem &auctionSystem);
 };
 
 #endif

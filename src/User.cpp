@@ -2,8 +2,8 @@
 
 User::User(std::string username, std::string password, std::string fullName, std::string phoneNumber,
            std::string email, std::string idType, std::string idNumber, UserRole role)
-    : username(username), password(password), fullName(fullName), phoneNumber(phoneNumber),
-      email(email), idType(idType), idNumber(idNumber), role(role) {}
+    : username(username), password(password), fullName(fullName),
+      phoneNumber(phoneNumber), email(email), idType(idType), idNumber(idNumber), role(role) {}
 
 User::~User() {}
 
@@ -18,6 +18,5 @@ UserRole User::getRole() const { return role; }
 
 void User::setUsername(std::string &username) { this->username = username; }
 void User::setPassword(std::string &password) { this->password = password; }
-
 
 bool User::validatePassword(const std::string &pwd) const { return password == pwd; }
