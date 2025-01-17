@@ -1,5 +1,6 @@
 #include "Member.h"
 #include "AuctionSystem.h"
+#include "Rating.h"
 
 #include <iostream>
 #include <regex>
@@ -7,10 +8,13 @@
 Member::Member(std::string username, std::string password, std::string fullName,
                std::string phoneNumber, std::string email, std::string idType,
                std::string idNumber, UserRole role = UserRole::Member)
-    : User(username, password, fullName, phoneNumber, email, idType, idNumber, role),
-      buyerRating(3.0), sellerRating(3.0) {
-        buyerRatingList.push_back(buyerRating);
-        sellerRatingList.push_back(sellerRating);
+    : User(username, password, fullName, phoneNumber, email, idType, idNumber, role) {
+        buyerRating = 3.0;
+        sellerRating = 3.0;
+        Rating *newBuyerStarterRating = new Rating(3.0, "");
+        Rating *newSellerStarterRating = new Rating(3.0, "");
+        buyerRatingList.push_back(*newBuyerStarterRating);
+        sellerRatingList.push_back(*newSellerStarterRating);
       }
 
 // CRUD items =========================================================================================================================================
@@ -468,42 +472,41 @@ void Member::setCreditPoints(double points)
 }
 
 // Getter for buyerRating
-double Member::getBuyerRating() const
+double Member::getBuyerRatingScore() const
 {
     return buyerRating;
 }
 
 // Setter for buyerRating
-void Member::setBuyerRating(double rating)
+void Member::setBuyerRatingScore(double ratingScore)
 {
-    buyerRating = rating;
+    buyerRating = ratingScore;
 }
 
 // Getter for sellerRating
-double Member::getSellerRating() const
+double Member::getSellerRatingScore() const
 {
     return sellerRating;
 }
 
 // Setter for sellerRating
-void Member::setSellerRating(double rating)
+void Member::setSellerRatingScore(double ratingScore)
 {
-    sellerRating = rating;
+    sellerRating = ratingScore;
 }
 
 
-void Member::setBuyerRating(double rating) { 
-    buyerRating = rating; 
+void Member::setBuyerRatingScore(double ratingScore) { 
+    buyerRating = ratingScore; 
 }
 
-void Member::setSellerRating(double rating) { 
-    sellerRating = rating; 
-}
 
-std::vector<double> Member::getBuyerRatingList() const {
+
+std::vector<Rating> &Member::getBuyerRatingList() {
     return buyerRatingList;
 }
-std::vector<double> Member::getSellerRatingList() const {
+
+std::vector<Rating> &Member::getSellerRatingList() {
     return sellerRatingList;
 }
 
@@ -513,12 +516,12 @@ double Member::getCreditPoints() const {
 }
 
 
-void Member::topUpCredits(const double &amount) { 
-    creditPoints += amount; 
-}
+//void Member::topUpCredits(const double &amount) { 
+//    creditPoints += amount; 
+//}
 
 //fuction to place a bid
-void Member::placeBid(Bid bid) {
+//void Member::placeBid(Bid bid) {
     // //get item by id that we are bidding on and get the minimum rating required to bid
     //if(this->getBuyerRating() >= getItemById(bid.getItemId()).getMinRating()) {
         // //check if bidding amount is higher than current highest bid for this item 
@@ -554,6 +557,5 @@ void Member::placeBid(Bid bid) {
             //} //end of if condition for checking right increment
         //} //end of if for checking amount
     //} //end of if condition for checking if minimum rating is met
-
     
-}
+//}

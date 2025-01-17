@@ -7,6 +7,7 @@
 #include "Item.h"
 #include "Bid.h"
 #include "AuctionSystem.h"
+#include "Rating.h"
 #include <vector>
 #include <string>
 
@@ -20,10 +21,9 @@ private:
     double buyerRating;
     //rating that a seller receives
     double sellerRating;
-    double creditPoints;
 
-    std::vector<double> buyerRatingList;
-    std::vector<double> sellerRatingList;
+    std::vector<Rating> buyerRatingList;
+    std::vector<Rating> sellerRatingList;
 
 public:
     Member(std::string username, std::string password, std::string fullName, std::string phoneNumber,
@@ -46,14 +46,16 @@ public:
 
     // Getters
     double getCreditPoints() const;
-    double getBuyerRating() const;
-    double getSellerRating() const;
+    double getBuyerRatingScore() const;
+    double getSellerRatingScore() const;
     const std::vector<int> &getActiveBids() const;
+    std::vector<Rating> &getBuyerRatingList();
+    std::vector<Rating> &getSellerRatingList();
 
     // Setters
     void setCreditPoints(double points);
-    void setBuyerRating(double rating);
-    void setSellerRating(double rating);
+    void setBuyerRatingScore(double ratingScore);
+    void setSellerRatingScore(double ratingScore);
 
     // Updating profiles
     void updateFullName(const std::string &newFullName, AuctionSystem &auctionSystem);

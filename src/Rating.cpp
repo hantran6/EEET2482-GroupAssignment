@@ -3,17 +3,37 @@
 
 #include <iostream>
 
-Rating::Rating(){};
+Rating::Rating(double ratingScore, std::string review) : ratingScore(ratingScore), review(review) {}
+
+
+double Rating::getRatingScore() {
+    return ratingScore;
+}
+
+std::string Rating::getReview() {
+    return review;
+}
+
+void Rating::setRatingScore(double ratingScore) {
+    this->ratingScore = ratingScore;
+}
+
+void Rating::setReview(std::string review) {
+    this->review = review;
+}
 
 void Rating::ratingBuyer(Member buyer) {
     std::cout << "Rate the buyer for your item from 1-5" << std::endl;
     std::cin >> ratingScore;
 
     std::cout << "Write a comment for your buyer: " << std::endl;
+    std::cin >> review;
 
-    buyer.getBuyerRatingList().push_back(ratingScore);
+    Rating *newRating = new Rating(ratingScore, review);
 
-    buyer.setBuyerRating(calculateAvgRating(buyer.getBuyerRatingList()));
+    buyer.getBuyerRatingList().push_back(*newRating);
+
+    buyer.setBuyerRatingScore(calculateAvgRating(buyer.getBuyerRatingList()));
 }
 
 void Rating::ratingSeller(Member seller) {
@@ -21,16 +41,19 @@ void Rating::ratingSeller(Member seller) {
     std::cin >> ratingScore;
 
     std::cout << "Write a comment for your seller: " << std::endl;
+    std::cin >> review;
 
-    seller.getSellerRatingList().push_back(ratingScore);
+    Rating *newRating = new Rating(ratingScore, review);
 
-    seller.setBuyerRating(calculateAvgRating(seller.getSellerRatingList()));
+    seller.getSellerRatingList().push_back(*newRating);
+
+    seller.setBuyerRatingScore(calculateAvgRating(seller.getSellerRatingList()));
 }
 
-double Rating::calculateAvgRating(std::vector<double> ratingList) {
+double Rating::calculateAvgRating(std::vector<Rating> ratingList) {
     double total = 0.0;
     for(int i = 0; i < ratingList.size(); i++) {
-        total += ratingList[i];
+        total += ratingList[i].getRatingScore();
     }
     return total / ratingList.size();
 }

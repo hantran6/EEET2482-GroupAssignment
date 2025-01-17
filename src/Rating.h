@@ -6,17 +6,26 @@
 #include "Item.h" 
 #include "AuctionSystem.h"
 #include <vector>
+#include <iostream>
 
 class Rating {
     private:
         double ratingScore;
-        //string ratingComment;
+        std::string review;
+        std::vector<Rating> ratingList;
+        
     public: 
-        Rating();
+        Rating(double ratingScore, std::string review);
         void ratingBuyer(Member buyer);
         void ratingSeller(Member seller);
 
-        double calculateAvgRating(std::vector<double> ratingList);
+        double calculateAvgRating(std::vector<Rating> ratingList);
+
+        double getRatingScore();
+        std::string getReview();
+
+        void setRatingScore(double ratingScore);
+        void setReview(std::string review);
 };
 
 #endif
