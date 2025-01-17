@@ -22,6 +22,9 @@ private:
 
     bool isActive; // Tracks whether the auction is active
 
+    bool buyerRatedSeller;
+    bool sellerRatedBuyer;
+
 public:
     Item(int id, const std::string &name, const std::string &category, const std::string &description,
          double startingBid, double bidIncrement, const std::string &sellerUsername, double minRating);
@@ -50,7 +53,7 @@ public:
     void setStartingBid(const double &newStartingBid);
     void setBidIncrement(const double &newBidIncrement);
     void setMinRating(const double &newMinRating);
-    
+
     void setIsActive(bool status);
 
     void setCurrentBid(const double bid);
@@ -58,6 +61,11 @@ public:
     void setEndDateTime(const std::string &endTime);
     void setHasActiveBids(bool status);
     void setStartDateTime(const std::string &time);
+
+    bool getBuyerRatedSeller() const;
+    bool getSellerRatedBuyer() const;
+    void setBuyerRatedSeller(const bool isRated);
+    void setSellerRatedBuyer(const bool isRated);
 };
 
 #endif // ITEM_H

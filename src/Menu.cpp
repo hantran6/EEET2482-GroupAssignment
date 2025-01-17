@@ -250,6 +250,7 @@ void displayUpdateProfileMenu(AuctionSystem &auctionSystem, Member &member)
         std::cout << "2. Update Phone Number\n";
         std::cout << "3. Update Email\n";
         std::cout << "4. Update Password\n";
+        std::cout << "5. Back \n";
         std::cout << "0. Exit\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
@@ -289,11 +290,14 @@ void displayUpdateProfileMenu(AuctionSystem &auctionSystem, Member &member)
             member.updatePassword(newPassword, auctionSystem);
             break;
         }
+        case 5:
+            return;
         case 0:
             std::cout << "Exiting update profile menu.\n";
             return;
         default:
             Utils::showError("Invalid choice. Please try again.");
+            break;
         }
     } while (true);
 }

@@ -1,5 +1,5 @@
 username,password,full_name,phone,email,id_type,id_number,credit_points,buyer_rating,seller_rating,seller_ratings,buyer_ratings,role
 admin,StrongP@ssword,,,,,,0.0,0.0,0.0,"[]","[]",Admin
-user1,StrongP@ssword1,User 1,098127843,user1@gmail.com,Passport,12941234124,1000,3,3,"[4]","[]",Member
-user2,StrongP@ssword2,User 2,128931293,user2@gmail.com,Passport,123125451,2000,3,3,"[]","[]",Member
-user3,StrongP@ssword3,User 3,12409129,user3@gmail.com,Passport,129591285,4000,3,3,"[]","[5]",Member
+user1,StrongP@ssword1,John Smith,09sa,user1@gmail.com,Passport,12312414215,1000,3,3,"[5]","[]",Member
+user2,StrongP@ssword2,User 2,129040214,user2@gmail.com,Passport,124125,0,3,3,"[]","[5,4]",Member
+user3,StrongP@ssword3,User 3,124125,user3@gmail.com,CitizenID,12412521,0,3,3,"[]","[]",Member

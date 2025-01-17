@@ -309,7 +309,7 @@ void AuctionSystem::placeBid(int itemId, double bidAmount, Member &newBidder)
     }
 
     // Check if the bid amount is valid (greater than the current bid + increment)
-    if (bidAmount < (item->getCurrentBid() + item->getBidIncrement()))
+    if (bidAmount < (item->getStartingBid() + item->getBidIncrement()))
     {
         Utils::showError("Bid amount is too low. Must be greater than the current bid + increment.");
         return;
@@ -408,7 +408,7 @@ void AuctionSystem::handleRatings(Member &member)
                 continue;
 
             // If the user is the highest bidder, prompt to rate the seller
-            if (item.getHighestBidder() == member.getUsername())
+            if (item.getHighestBidder() == member.getUsername() && !item.getBuyerRatedSeller())
             {
                 std::cout << "You won the auction for item: " << item.getName() << "!\n";
                 Member *seller = getMemberByUsername(item.getSellerUsername());
@@ -421,11 +421,12 @@ void AuctionSystem::handleRatings(Member &member)
                         std::cin >> rating;
                     } while (rating < 1 || rating > 5);
                     seller->addSellerRating(rating);
+                    item.setBuyerRatedSeller(true);
                 }
             }
 
             // If the user is the seller, prompt to rate the highest bidder
-            if (item.getSellerUsername() == member.getUsername())
+            if (item.getSellerUsername() == member.getUsername() && !item.getSellerRatedBuyer())
             {
                 std::cout << "Your item \"" << item.getName() << "\" was sold!\n";
                 Member *buyer = getMemberByUsername(item.getHighestBidder());
@@ -438,6 +439,7 @@ void AuctionSystem::handleRatings(Member &member)
                         std::cin >> rating;
                     } while (rating < 1 || rating > 5);
                     buyer->addBuyerRating(rating);
+                    item.setSellerRatedBuyer(true);
                 }
             }
         }
@@ -635,7 +637,7 @@ void AuctionSystem::loadItems(const std::string &filename)
             fields.push_back(word);
         }
 
-        if (fields.size() == 12)
+        if (fields.size() == 14)
         { // Ensure all fields are present
             int id = std::stoi(fields[0]);
             std::string name = fields[1];
@@ -649,6 +651,8 @@ void AuctionSystem::loadItems(const std::string &filename)
             double minRating = std::stod(fields[9]);
             std::string endDateTime = fields[10];
             bool isActive = fields[11] == "1";
+            bool buyerRatedSeller = fields[12] == "1";
+            bool sellerRatedBuyer = fields[13] == "1";
 
             // Create and populate the Item object
             Item item(id, name, category, description, startingBid, bidIncrement, seller, minRating);
@@ -656,6 +660,8 @@ void AuctionSystem::loadItems(const std::string &filename)
             item.setHighestBidder(highestBidder);
             item.setEndDateTime(endDateTime);
             item.setIsActive(isActive);
+            item.setBuyerRatedSeller(buyerRatedSeller);
+            item.setSellerRatedBuyer(sellerRatedBuyer);
 
             // Add the item to the list
             items.push_back(item);
@@ -673,7 +679,7 @@ void AuctionSystem::saveItems(const std::string &filename)
         return;
     }
 
-    outFile << "id,name,category,description,starting_bid,bid_increment,current_bid,highest_bidder,seller,min_rating,end_date_time,is_active\n";
+    outFile << "id,name,category,description,starting_bid,bid_increment,current_bid,highest_bidder,seller,min_rating,end_date_time,is_active,seller_rated,buyer_rated\n";
 
     for (const auto &item : items)
     {
@@ -688,7 +694,9 @@ void AuctionSystem::saveItems(const std::string &filename)
                 << item.getSellerUsername() << ","
                 << item.getMinRating() << ","
                 << item.getEndDateTime() << ","
-                << (item.getIsActive() ? "1" : "0") << "\n";
+                << (item.getIsActive() ? "1" : "0") << ","
+                << (item.getBuyerRatedSeller() ? "1" : "0") << ","
+                << (item.getSellerRatedBuyer() ? "1" : "0") << "\n";
     }
 
     outFile.close();
