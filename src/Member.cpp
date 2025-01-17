@@ -57,10 +57,13 @@ void Member::createListing(AuctionSystem &auctionSystem)
     std::string name, category, description, endDateTime;
     int startingBid, bidIncrement, minRating;
 
+    const std::regex numberRegex("^[0-9]+$");
+
     std::cin.ignore(); // Clear buffer before reading inputs
 
     std::cout << "Enter item name: ";
     std::getline(std::cin, name);
+    
 
     std::cout << "Enter category: ";
     std::getline(std::cin, category);
@@ -110,23 +113,32 @@ void Member::createListing(AuctionSystem &auctionSystem)
     std::string startDateTime = Utils::getCurrentDateTime(); // Fetch the current date and time
 
     // Create the new item
-    Item newItem(id, name, category, description, startingBid, bidIncrement, username, minRating);
-    newItem.setStartDateTime(startDateTime); // Automatically set start date & time
-    newItem.setEndDateTime(endDateTime);     // Set the user-provided end date & time
-    newItem.setHasActiveBids(false);         // No active bids on creation
+    if(std::regex_match(startingBid, numberRegex) && std::regex_match(bidIncrement, numberRegex) && std::regex_match(minRating, numberRegex)) {
+        Item newItem(id, name, category, description, startingBid, bidIncrement, username, minRating);
+        newItem.setStartDateTime(startDateTime); // Automatically set start date & time
+        newItem.setEndDateTime(endDateTime);     // Set the user-provided end date & time
+        newItem.setHasActiveBids(false);         // No active bids on creation
 
-    // Add the new item to the auction system
-    auctionSystem.addItem(newItem);
+        // Add the new item to the auction system
+        auctionSystem.addItem(newItem);
 
-    Utils::showSuccess("Item listing created successfully.");
+        Utils::showSuccess("Item listing created successfully.");
+    } else {
+        Utils::showError("Invalid input. The starting bid, bid increment and minimum rating have to be numbers.");
+    }
+    
 }
 
 void Member::editListing(AuctionSystem &auctionSystem)
 {
     int itemId;
     std::cout << "Enter item ID to edit: ";
-    std::cin >> itemId;
-    std::cin.ignore();
+    if(std::cin >> itemId) {
+        std::cin.ignore();
+    } else {
+        Utils::showError("Invalid input. Please enter a number.");
+    }
+    
 
     Item *item = auctionSystem.getItemById(itemId);
     if (!item || item->getSellerUsername() != username)
@@ -143,17 +155,23 @@ void Member::editListing(AuctionSystem &auctionSystem)
     std::string newName, newCategory, newDescription, newEndDateTime;
     int newStartingBid = -1, newBidIncrement = -1, newMinRating = -1;
 
+
+    const std::regex letterRegex("^[A-Za-z]+$");
+    const std::regex numberRegex("^[0-9]+$");
+
     std::cout << "\nTo retain the old value, leave the field blank and press Enter.\n";
 
     std::cout << "Enter new item name (current: " << item->getName() << "): ";
     std::getline(std::cin, newName);
-    if (newName.empty())
-        newName = item->getName();
+        if (newName.empty())
+            newName = item->getName();
+  
 
     std::cout << "Enter new category (current: " << item->getCategory() << "): ";
     std::getline(std::cin, newCategory);
     if (newCategory.empty())
         newCategory = item->getCategory();
+
 
     std::cout << "Enter new description (current: " << item->getDescription() << "): ";
     std::getline(std::cin, newDescription);
@@ -163,21 +181,33 @@ void Member::editListing(AuctionSystem &auctionSystem)
     std::cout << "Enter new starting bid (current: " << item->getStartingBid() << "): ";
     std::string startingBidInput;
     std::getline(std::cin, startingBidInput);
-    if (!startingBidInput.empty())
+    if(std::regex_match(startingBidInput, numberRegex)) {
+        if (!startingBidInput.empty())
         newStartingBid = std::stoi(startingBidInput);
+    } else {
+        Utils::showError("Invalid input. Please type in a number");
+    }
 
     std::cout << "Enter new bid increment (current: " << item->getBidIncrement() << "): ";
     std::string bidIncrementInput;
     std::getline(std::cin, bidIncrementInput);
-    if (!bidIncrementInput.empty())
+    if(std::regex_match(bidIncrementInput, numberRegex)) {
+        if (!bidIncrementInput.empty())
         newBidIncrement = std::stoi(bidIncrementInput);
+    } else {
+        Utils::showError("Invalid input. Please type in a number");
+    }
 
     std::cout << "Enter new minimum buyer rating (current: " << item->getMinRating() << "): ";
     std::string minRatingInput;
     std::getline(std::cin, minRatingInput);
-    if (!minRatingInput.empty())
+    if(std::regex_match(minRatingInput, numberRegex)) {
+        if (!minRatingInput.empty())
         newMinRating = std::stoi(minRatingInput);
-
+    } else {
+        Utils::showError("Invalid input. Please type in a number");
+    }
+    
     // Validate new end date & time
     std::regex dateTimeRegex(R"(^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$)");
     while (true)
@@ -227,23 +257,26 @@ void Member::removeListing(AuctionSystem &auctionSystem)
 {
     int itemId;
     std::cout << "Enter item ID to remove: ";
-    std::cin >> itemId;
-    std::cin.ignore();
+    if(std::cin >> itemId) {
+        std::cin.ignore();
 
-    Item *item = auctionSystem.getItemById(itemId);
-    if (!item || item->getSellerUsername() != username)
-    {
-        Utils::showError("Item not found or you are not the seller.");
-        return;
-    }
-    if (item->getHasActiveBids())
-    {
-        Utils::showError("Cannot remove listing. Active bids exist.");
-        return;
-    }
+        Item *item = auctionSystem.getItemById(itemId);
+        if (!item || item->getSellerUsername() != username)
+        {
+            Utils::showError("Item not found or you are not the seller.");
+            return;
+        }
+        if (item->getHasActiveBids())
+        {
+            Utils::showError("Cannot remove listing. Active bids exist.");
+            return;
+        }
 
-    auctionSystem.removeItem(itemId);
-    Utils::showSuccess("Item listing removed and database updated successfully.");
+        auctionSystem.removeItem(itemId);
+        Utils::showSuccess("Item listing removed and database updated successfully.");
+    } else {
+        std::cout << "Invalid input. Please type in a number." << std::endl;
+    }
 }
 
 // Profile Management ==================================================================================================================================
@@ -308,20 +341,20 @@ void Member::topUpCredits(AuctionSystem &auctionSystem)
     double amount;
 
     std::cout << "Enter the amount to top up: ";
-    std::cin >> amount;
+    if(std::cin >> amount) {
+        if (amount <= 0)
+        {
+            Utils::showError("Amount must be greater than 0.");
+            return;
+        }
 
-    if (amount <= 0)
-    {
-        Utils::showError("Amount must be greater than 0.");
-        return;
+        // Update the member's credit balance
+        creditPoints += amount;
+
+        auctionSystem.saveUsers("./data/users.csv");
+        Utils::showSuccess("Credits successfully topped up!");
+        Utils::showInfo("Your new credit balance is: " + std::to_string(creditPoints) + " CP");
     }
-
-    // Update the member's credit balance
-    creditPoints += amount;
-
-    auctionSystem.saveUsers("./data/users.csv");
-    Utils::showSuccess("Credits successfully topped up!");
-    Utils::showInfo("Your new credit balance is: " + std::to_string(creditPoints) + " CP");
 }
 
 // Buyers actions =======================================================================================================================================
