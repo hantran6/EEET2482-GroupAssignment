@@ -14,12 +14,13 @@ class Member : public User
 {
 private:
     std::vector<int> activeBids; // Track item IDs with active bids
+    double creditPoints;
     double buyerRating;
     double sellerRating;
 
 public:
     Member(std::string username, std::string password, std::string fullName, std::string phoneNumber,
-           std::string email, std::string idType, std::string idNumber, UserRole(role));
+           std::string email, std::string idType, std::string idNumber, UserRole role);
 
     // Member-specific methods
     void placeBid(int itemId, int bidAmount);
@@ -27,14 +28,17 @@ public:
     void createListing(AuctionSystem &auctionSystem);
     void editListing(AuctionSystem &auctionSystem);
     void removeListing(AuctionSystem &auctionSystem);
-    // void rateTransaction(const std::string &role, double rating);
-
     void viewProfile() const;
 
     // Getters
+    double getCreditPoints() const;
     double getBuyerRating() const;
     double getSellerRating() const;
-    int getItemById() const;
+
+    // Setters
+    void setCreditPoints(double points);
+    void setBuyerRating(double rating);
+    void setSellerRating(double rating);
 
     // Updating profiles
     void updateFullName(const std::string &newFullName);

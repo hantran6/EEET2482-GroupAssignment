@@ -272,12 +272,38 @@ void Member::updatePassword(const std::string &newPassword)
     }
 }
 
+// Getter for creditPoints
+double Member::getCreditPoints() const
+{
+    return creditPoints;
+}
+
+// Setter for creditPoints
+void Member::setCreditPoints(double points)
+{
+    creditPoints = points;
+}
+
+// Getter for buyerRating
 double Member::getBuyerRating() const
 {
     return buyerRating;
 }
 
+// Setter for buyerRating
+void Member::setBuyerRating(double rating)
+{
+    buyerRating = rating;
+}
+
+// Getter for sellerRating
 double Member::getSellerRating() const
 {
     return sellerRating;
+}
+
+// Setter for sellerRating
+void Member::setSellerRating(double rating)
+{
+    sellerRating = rating;
 }

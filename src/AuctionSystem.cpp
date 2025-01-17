@@ -74,6 +74,7 @@ void AuctionSystem::registerMember()
     Member *newMember = new Member(username, password, fullName, phone, email, idType, idNumber, UserRole::Member);
     newMember->setBuyerRating(3.0);
     newMember->setSellerRating(3.0);
+    newMember->setCreditPoints(0.0); // Initialize with zero credits
 
     members.push_back(newMember); // Add to members list
     Utils::showSuccess("Registration successful! Please log in as a member to access more features.");
@@ -253,7 +254,7 @@ void AuctionSystem::loadUsers(const std::string &filename)
             {
                 Member *member = new Member(fields[0], fields[1], fields[2], fields[3], fields[4],
                                             fields[5], fields[6], role);
-                member->topUpCredits(std::stoi(fields[7]));
+                member->setCreditPoints(std::stod(fields[7]));
                 member->setBuyerRating(std::stod(fields[8]));
                 member->setSellerRating(std::stod(fields[9]));
                 members.push_back(member); // Store Member object
@@ -282,10 +283,20 @@ void AuctionSystem::saveUsers(const std::string &filename)
 
     for (const auto &user : members)
     {
-        outFile << user->getUsername() << "," << user->getPassword() << "," << user->getFullName() << ","
-                << user->getPhoneNumber() << "," << user->getEmail() << "," << user->getIdType() << ","
-                << user->getIdNumber() << "," << user->getCreditPoints() << "," << user->getBuyerRating() << ","
-                << user->getSellerRating() << "," << (user->getRole() == UserRole::Admin ? "Admin" : "Member") << "\n";
+        if (user->getRole() == UserRole::Member)
+        {
+            Member *member = dynamic_cast<Member *>(user);
+            outFile << member->getUsername() << "," << member->getPassword() << "," << member->getFullName() << ","
+                    << member->getPhoneNumber() << "," << member->getEmail() << "," << member->getIdType() << ","
+                    << member->getIdNumber() << "," << member->getCreditPoints() << "," << member->getBuyerRating() << ","
+                    << member->getSellerRating() << ",Member\n";
+        }
+        else if (user->getRole() == UserRole::Admin)
+        {
+            outFile << user->getUsername() << "," << user->getPassword() << "," << user->getFullName() << ","
+                    << user->getPhoneNumber() << "," << user->getEmail() << "," << user->getIdType() << ","
+                    << user->getIdNumber() << ",0.0,0.0,0.0,Admin\n";
+        }
     }
 
     outFile.close();

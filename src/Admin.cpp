@@ -7,18 +7,24 @@ Admin::Admin(std::string username, std::string password, UserRole role)
 // Admin-specific methods
 void Admin::viewAllMembers(const std::vector<User *> &members) const
 {
-    std::cout << "========== All Members ==========\n";
     for (const auto &user : members)
     {
+        std::cout << "Username: " << user->getUsername();
+
+        // Check if the user is a Member and display additional details
         if (user->getRole() == UserRole::Member)
         {
-            std::cout << "Username: " << user->getUsername()
-                      << ", Full Name: " << user->getFullName()
-                      << ", Email: " << user->getEmail()
-                      << ", Credit Points: " << user->getCreditPoints() << "\n";
+            Member *member = dynamic_cast<Member *>(user);
+            if (member)
+            {
+                std::cout << ", Credit Points: " << member->getCreditPoints()
+                          << ", Buyer Rating: " << member->getBuyerRating()
+                          << ", Seller Rating: " << member->getSellerRating();
+            }
         }
+
+        std::cout << "\n";
     }
-    std::cout << "=================================\n";
 }
 
 // void Admin::viewAllListings() const
