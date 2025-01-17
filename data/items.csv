@@ -1,0 +1,2 @@
+id,name,category,description,starting_bid,bid_increment,current_bid,highest_bidder,seller,min_rating,end_date_time,is_active,seller_rated,buyer_rated
+1,Item1,Cat1,DESC1,1000,10,1000,user2,user1,3,2025-01-17 22:39:00,0,1,1
